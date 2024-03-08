@@ -170,6 +170,8 @@ MonoBehaviour:
   speed: 0
   speedAccelerate: 0.1
   speedDecelerate: 0.05
+  maxHitPoint: 100
+  hitCoolDown: 1
 --- !u!1 &186080684
 GameObject:
   m_ObjectHideFlags: 0
@@ -249,10 +251,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BigDishMoveSpeed: 0.5
   BigFishMoveSpeedChase: 1
+  maxHitPointBigFish: 10
+  damageBigFish: 2
   MidDishMoveSpeed: 0.5
   MidFishMoveSpeedChase: 1
+  maxHitPointMidFish: 10
+  damageMidFish: 2
   DartDishMoveSpeed: 0.5
   DartFishMoveSpeedChase: 1
+  maxHitPointDartFish: 5
+  damageDartFish: 1
   BigFishQuantity: 2
   MidFishQuantity: 2
   DartFishQuantity: 2

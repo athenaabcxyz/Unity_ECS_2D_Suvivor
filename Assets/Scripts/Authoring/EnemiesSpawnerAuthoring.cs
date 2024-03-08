@@ -7,12 +7,18 @@ public class EnemiesSpawnerAuthoring : MonoBehaviour
 {
     public float BigDishMoveSpeed = 0.5f;
     public float BigFishMoveSpeedChase = 1f;
+    public int maxHitPointBigFish = 15;
+    public int damageBigFish = 1;
 
     public float MidDishMoveSpeed = 0.5f;
     public float MidFishMoveSpeedChase = 1f;
+    public int maxHitPointMidFish = 10;
+    public int damageMidFish = 2;
 
-    public float DartDishMoveSpeed = 0.5f;
-    public float DartFishMoveSpeedChase = 1f;
+    public float DartDishMoveSpeed = 1f;
+    public float DartFishMoveSpeedChase = 1.5f;
+    public int maxHitPointDartFish = 5;
+    public int damageDartFish = 1;
 
     public int BigFishQuantity;
     public int MidFishQuantity;
@@ -35,17 +41,23 @@ public class EnemiesSpawnerAuthoring : MonoBehaviour
             AddComponent(entity, new BigFishInfo
             {
                 moveSpeed = authoring.BigDishMoveSpeed,
-                moveSpeedUp = authoring.BigFishMoveSpeedChase
+                moveSpeedUp = authoring.BigFishMoveSpeedChase,
+                maxHitPoint = authoring.maxHitPointBigFish,
+                damage = authoring.damageBigFish
             });
             AddComponent(entity, new MidFishInfo
             {
                 moveSpeed = authoring.MidDishMoveSpeed,
-                moveSpeedUp = authoring.MidFishMoveSpeedChase
+                moveSpeedUp = authoring.MidFishMoveSpeedChase,
+                maxHitPoint = authoring.maxHitPointMidFish,
+                damage = authoring.damageMidFish
             });
             AddComponent(entity, new DartFishInfo
             {
                 moveSpeed = authoring.DartDishMoveSpeed,
-                moveSpeedUp = authoring.DartFishMoveSpeedChase
+                moveSpeedUp = authoring.DartFishMoveSpeedChase,
+                maxHitPoint = authoring.maxHitPointDartFish,
+                damage = authoring.damageDartFish
             });
         }
     }

@@ -72,20 +72,26 @@ public partial struct EnemiesSpawnerSystem : ISystem
 
                 enemy.enemiesType = 0;
                 enemy.moveSpeed = bigFishInfo.moveSpeed;
-                enemy.moveSpeedUp = bigFishInfo.moveSpeedUp;         
+                enemy.moveSpeedUp = bigFishInfo.moveSpeedUp;
+                enemy.damage = bigFishInfo.damage;
+                enemy.currentHitPoint = bigFishInfo.maxHitPoint;
             }
             else
             if(index<spawnerInfo.MidFishQuantity)
             {
                 enemy.enemiesType = 1;
-                enemy.moveSpeed = bigFishInfo.moveSpeed;
-                enemy.moveSpeedUp = bigFishInfo.moveSpeedUp;
+                enemy.moveSpeed = midFishInfo.moveSpeed;
+                enemy.moveSpeedUp = midFishInfo.moveSpeedUp;
+                enemy.damage = midFishInfo.damage;
+                enemy.currentHitPoint = midFishInfo.maxHitPoint;
             }
             else
             {
                 enemy.enemiesType = 2;
-                enemy.moveSpeed = bigFishInfo.moveSpeed;
-                enemy.moveSpeedUp = bigFishInfo.moveSpeedUp;
+                enemy.moveSpeed = dartFishInfo.moveSpeed;
+                enemy.moveSpeedUp = dartFishInfo.moveSpeedUp;
+                enemy.damage = dartFishInfo.damage;
+                enemy.currentHitPoint = dartFishInfo.maxHitPoint;
             }
         }
     }

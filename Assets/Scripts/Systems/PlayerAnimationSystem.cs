@@ -35,6 +35,11 @@ public partial struct PlayerAnimationSystem : ISystem
                     PlayerMovementInfo playerMovementInfo = state.EntityManager.GetComponentData<PlayerMovementInfo>(entity);
                     playerVisualRef.gameObject.GetComponent<Animator>().SetFloat("Speed", playerMovementInfo.moveSpeed);
                 }
+
+                if(state.EntityManager.HasComponent<PlayerAttackedFlag>(entity))
+                {
+                    playerVisualRef.gameObject.GetComponent<Animator>().Play("PlayerHurt");
+                }
                    
             }
         }
