@@ -8,8 +8,6 @@ public class PlayerAuthoring : MonoBehaviour
 {
     Animator animator;
     [SerializeField] float speed;
-    [SerializeField] float speedAccelerate;
-    [SerializeField] float speedDecelerate;
     [SerializeField] int maxHitPoint;
     [SerializeField] float hitCoolDown = 1f;
 
@@ -23,8 +21,6 @@ public class PlayerAuthoring : MonoBehaviour
             AddComponent(entity, new PlayerInfoComponent
             {
                 Speed = authoring.speed,
-                SpeedAccelerate = authoring.speedAccelerate,
-                SpeedDecelerator = authoring.speedDecelerate,
                 maxHitPoint = authoring.maxHitPoint,
                 currentHitPoint = authoring.maxHitPoint,    
                 hitCoolDown = authoring.hitCoolDown,

@@ -7,6 +7,7 @@ using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UIElements;
 using static UnityEngine.EventSystems.EventTrigger;
 
 [BurstCompile]
@@ -18,12 +19,12 @@ public partial struct PlayerControlSystem : ISystem
         state.RequireForUpdate<PlayerInfoComponent>();
     }
 
-    [BurstCompile]
     public void OnUpdate(ref SystemState state)
     {
         
         var horizontalInput = Input.GetAxis("Horizontal");
         var verticalInput = Input.GetAxis("Vertical");
+        var mousePosition = Input.mousePosition;
         var input = new float3(horizontalInput, verticalInput, 0) * SystemAPI.Time.DeltaTime;
 
         
@@ -32,102 +33,93 @@ public partial struct PlayerControlSystem : ISystem
 
         foreach (var (transform, player, entity) in SystemAPI.Query<RefRW<LocalTransform>, RefRW<PlayerInfoComponent>>().WithEntityAccess())
         {
-            float maxSpeed = 1f;
 
-            if (Input.GetKey(KeyCode.Space))
-            {
-                maxSpeed = 2f;
-            }
-            else
-            {
-                maxSpeed = 1f;
-                if(player.ValueRW.Speed > maxSpeed)
-                {
-                    player.ValueRW.Speed -= player.ValueRO.SpeedDecelerator;
-                }
-            }
-            if (input.x != 0 || input.y != 0)
-            {
-                if (player.ValueRW.Speed < (maxSpeed - player.ValueRO.SpeedAccelerate))
-                {
-                    player.ValueRW.Speed += player.ValueRO.SpeedAccelerate;
-                }
-            }
-            else if (input.x == 0 && input.y == 0)
-            {
-                if (player.ValueRW.Speed >0)
-                {
-                    player.ValueRW.Speed -= player.ValueRO.SpeedDecelerator;
-                    if(player.ValueRW.Speed <= player.ValueRO.SpeedDecelerator)
-                    {
-                        player.ValueRW.Speed = 0;
-                    }
-                }
-            }
 
-            float3 move = new float3();
-
-            if(input.x==0 && input.y==0)
-            {
-                if (state.EntityManager.HasComponent<PlayerMovementInfo>(entity))
-                {
-                    float2 lastMove = state.EntityManager.GetComponentData<PlayerMovementInfo>(entity).moveDirection;
-                    move.x = lastMove.x;
-                    move.y = lastMove.y;
-                }
-            }
-            else
-            {
-                move.x = input.x;
-                move.y = input.y;
-            }
-            
-            float3 newPosition = transform.ValueRW.Position + move * player.ValueRO.Speed;
+            float3 newPosition = transform.ValueRW.Position + input * player.ValueRO.Speed;
             transform.ValueRW.Position = newPosition;
-            if (input.x > 0)
-            {
-                transform.ValueRW.Rotation = new quaternion(0, 0, 0, 1);
-            }
-            else
-                if (input.x < 0)
-            {
-                transform.ValueRW.Rotation = new quaternion(0, -6, 0, 1);
-            }
-         
+
+            Vector3 dir = mousePosition - Camera.main.WorldToScreenPoint(transform.ValueRO.Position);
+
             if (!state.EntityManager.HasComponent<PlayerMovementInfo>(entity))
             {
                 ecb.AddComponent(entity, new PlayerMovementInfo
                 {
-                    moveDirection = new float2(input.x, input.y),
-                    moveSpeed = player.ValueRO.Speed
+                    mouseAngle = GetAimDirection(GetAngleFromVector(dir)),
+                    moveSpeed = player.ValueRO.Speed,
+                    mousePosition = new float3(mousePosition.x, mousePosition.y, mousePosition.z)
                 });
             }
             else
             {
-                if (input.x != 0 || input.y != 0)
+
+                state.EntityManager.SetComponentData(entity, new PlayerMovementInfo
                 {
-                    state.EntityManager.SetComponentData(entity, new PlayerMovementInfo
-                    {
-                        moveDirection = new float2(input.x, input.y),
-                        moveSpeed = player.ValueRO.Speed
-                    });
-                }
-                else
-                {
-                    if(player.ValueRW.Speed ==0)
-                    {
-                        state.EntityManager.SetComponentData(entity, new PlayerMovementInfo
-                        {
-                            moveDirection = new float2(0, 0),
-                            moveSpeed = player.ValueRO.Speed
-                        });
-                    }
-                }
-                
+                    moveDirection = new float2(input.x, input.y),
+                    mouseAngle = GetAimDirection(GetAngleFromVector(dir)),
+                    moveSpeed = player.ValueRO.Speed,
+                    mousePosition = new float3(mousePosition.x, mousePosition.y, mousePosition.z)
+                });
+
+
 
             }
         }
         ecb.Playback(state.EntityManager);
         ecb.Dispose();
+    }
+
+    [BurstCompile]
+    public MouseRotationEnum GetAimDirection(float angleDegrees)
+    {
+        MouseRotationEnum aimDirection;
+
+        // Set player direction
+        //Up Right
+        if (angleDegrees >= 22f && angleDegrees <= 67f)
+        {
+            aimDirection = MouseRotationEnum.aimUpRight;
+        }
+        // Up
+        else if (angleDegrees > 67f && angleDegrees <= 112f)
+        {
+            aimDirection = MouseRotationEnum.aimUp;
+        }
+        // Up Left
+        else if (angleDegrees > 112f && angleDegrees <= 158f)
+        {
+            aimDirection = MouseRotationEnum.aimUpLeft;
+        }
+        // Left
+        else if ((angleDegrees <= 180f && angleDegrees > 158f) || (angleDegrees > -180 && angleDegrees <= -135f))
+        {
+            aimDirection = MouseRotationEnum.aimLeft;
+        }
+        // Down
+        else if ((angleDegrees > -135f && angleDegrees <= -45f))
+        {
+            aimDirection = MouseRotationEnum.aimDown;
+        }
+        // Right
+        else if ((angleDegrees > -45f && angleDegrees <= 0f) || (angleDegrees > 0 && angleDegrees < 22f))
+        {
+            aimDirection = MouseRotationEnum.aimRight;
+        }
+        else
+        {
+            aimDirection = MouseRotationEnum.aimRight;
+        }
+
+        return aimDirection;
+
+    }
+    public float GetAngleFromVector(float3 vector)
+    {
+        
+        float radians = Mathf.Atan2(vector.y, vector.x);
+
+        float degrees = radians * Mathf.Rad2Deg;
+
+        return degrees;
+
     }
 }

@@ -10,7 +10,11 @@ using static UnityEngine.GraphicsBuffer;
 public class CameraController : MonoBehaviour {
 
     private EntityManager entityManager;
-    [SerializeField] GameObject staticBackground;
+
+    public float maxXSize = 43f;
+    public float minXSize = -43f;
+    public float maxYSize = 25;
+    public float minYSize = -25f;
     private void Awake()
     {
         entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
@@ -25,8 +29,18 @@ public class CameraController : MonoBehaviour {
                 foreach (var entity in query.ToEntityArray(Allocator.Temp))
                 {
                     var position = entityManager.GetComponentData<LocalTransform>(entity).Position;
-                    transform.position = new Vector3(position.x, position.y, -10);
-                    staticBackground.transform.position = new Vector3(position.x, position.y, 1);
+                    Vector3 newPosition = new Vector3(transform.position.x, transform.position.y, transform.position.z);
+                    if (position.x < maxXSize && position.x > minXSize )
+                    {
+                        newPosition.x = position.x;
+                    }
+                    if(position.y < maxYSize && position.y > minYSize)
+                    {
+                        newPosition.y = position.y;
+                    }
+
+                    transform.position = newPosition;
+
                 }
             }
         }
