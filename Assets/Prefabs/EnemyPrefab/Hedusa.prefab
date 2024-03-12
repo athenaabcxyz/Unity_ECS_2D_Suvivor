@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1496135191042176113}
   - component: {fileID: 2145977821932402423}
   m_Layer: 3
-  m_Name: EnemyEntity
+  m_Name: Hedusa
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -44,3 +44,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0d25ba8c75945348807168cb99aa868, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemy: {fileID: 11400000, guid: 948aa34b672deb14fa42140507da3886, type: 2}

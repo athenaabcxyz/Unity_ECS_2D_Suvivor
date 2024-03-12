@@ -30,21 +30,22 @@ public partial struct EnemiesSpawnerSystem : ISystem
         {
             if (SystemAPI.TryGetSingleton(out SpawnerInfo enemiesSpawner))
             {
-                var enemyArray = new NativeArray<Entity>(enemiesSpawner.BigFishQuantity+enemiesSpawner.DartFishQuantity+enemiesSpawner.MidFishQuantity, Allocator.Temp);
-
-                state.EntityManager.Instantiate(enemiesSpawner.enemy, enemyArray);
-                foreach(var entity in enemyArray)
+                foreach (SpawnComponentInfo spawnInfo in enemiesSpawner.spawnInfo)
                 {
-                    var enemy = SystemAPI.GetComponentRW<EnemiesInfo>(entity);
-                    enemy.ValueRW.random = Random.CreateFromIndex((uint)entity.Index);
+                    NativeArray<Entity> entityList = new NativeArray<Entity>(spawnInfo.spawnQuantities, Allocator.Temp);
+                    state.EntityManager.Instantiate(spawnInfo.enemiesPrefab, entityList);
+                    foreach (var entity in entityList)
+                    {
+                        var enemy = SystemAPI.GetComponentRW<EnemiesInfo>(entity);
+                        enemy.ValueRW.random = Random.CreateFromIndex((uint)entity.Index);
+                    }
+                    entityList.Dispose();
                 }
 
+               
                 var bigFishSpawnJob = new FishSpawnJob
                 {
                     spawnerInfo = enemiesSpawner,
-                    bigFishInfo = SystemAPI.GetSingleton<BigFishInfo>(),
-                    midFishInfo = SystemAPI.GetSingleton<MidFishInfo>(),
-                    dartFishInfo = SystemAPI.GetSingleton<DartFishInfo>(),
                 };
                 bigFishSpawnJob.ScheduleParallel();
                 state.Dependency.Complete();
@@ -56,43 +57,14 @@ public partial struct EnemiesSpawnerSystem : ISystem
     public partial struct FishSpawnJob : IJobEntity
     {
         public SpawnerInfo spawnerInfo;
-        public BigFishInfo bigFishInfo;
-        public MidFishInfo midFishInfo;
-        public DartFishInfo dartFishInfo;
+
 
         readonly void Execute([EntityIndexInQuery] int index, ref LocalTransform transform, ref EnemiesInfo enemy, Entity entity)
         {
             float2 newPosition = (enemy.random.NextFloat2(new float2(-40, -20), new float2(40, 20)));
 
             transform.Position = new float3(newPosition.x, newPosition.y, 0);
-            transform.Rotation = quaternion.identity;
-
-            if (index <spawnerInfo.BigFishQuantity)
-            {
-
-                enemy.enemiesType = 0;
-                enemy.moveSpeed = bigFishInfo.moveSpeed;
-                enemy.moveSpeedUp = bigFishInfo.moveSpeedUp;
-                enemy.damage = bigFishInfo.damage;
-                enemy.currentHitPoint = bigFishInfo.maxHitPoint;
-            }
-            else
-            if(index<spawnerInfo.MidFishQuantity)
-            {
-                enemy.enemiesType = 1;
-                enemy.moveSpeed = midFishInfo.moveSpeed;
-                enemy.moveSpeedUp = midFishInfo.moveSpeedUp;
-                enemy.damage = midFishInfo.damage;
-                enemy.currentHitPoint = midFishInfo.maxHitPoint;
-            }
-            else
-            {
-                enemy.enemiesType = 2;
-                enemy.moveSpeed = dartFishInfo.moveSpeed;
-                enemy.moveSpeedUp = dartFishInfo.moveSpeedUp;
-                enemy.damage = dartFishInfo.damage;
-                enemy.currentHitPoint = dartFishInfo.maxHitPoint;
-            }
+            transform.Rotation = quaternion.identity;      
         }
     }
 
