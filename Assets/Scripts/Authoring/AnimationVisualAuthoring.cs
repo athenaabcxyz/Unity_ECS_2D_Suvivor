@@ -6,10 +6,8 @@ using UnityEngine.AI;
 
 public class AnimationVisualAuthoring : MonoBehaviour
 {
-    [SerializeField] private GameObject playerPrefab;
-    [SerializeField] private GameObject BigFish;
-    [SerializeField] private GameObject DartFish;
-    [SerializeField] private GameObject MidFish;
+    [SerializeField] private List<GameObject> VisualPrefabs;
+
 
     private class Baker: Baker<AnimationVisualAuthoring> 
     {
@@ -18,10 +16,8 @@ public class AnimationVisualAuthoring : MonoBehaviour
             var entity = GetEntity(TransformUsageFlags.None);
             AddComponentObject(entity, new AnimationVisualsPrefabs
             {
-                Player = authoring.playerPrefab,
-                BigFish = authoring.BigFish,
-                DartFish = authoring.DartFish,
-                MidFish = authoring.MidFish,
+               
+                VisualPrefab = authoring.VisualPrefabs,
             });
         }
     }

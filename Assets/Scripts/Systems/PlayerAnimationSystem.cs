@@ -21,7 +21,7 @@ public partial struct PlayerAnimationSystem : ISystem
         {
             if(!state.EntityManager.HasComponent<VisualsReferenceComponent>(entity))
             {
-                GameObject playerVisual = Object.Instantiate(animationVisualsPrefabs.Player);
+                GameObject playerVisual = Object.Instantiate(animationVisualsPrefabs.VisualPrefab[0]);
                 ecb.AddComponent(entity, new VisualsReferenceComponent { gameObject = playerVisual });
             }
             else

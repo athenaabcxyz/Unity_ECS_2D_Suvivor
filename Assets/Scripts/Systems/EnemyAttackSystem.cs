@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Unity.Entities;
 using UnityEngine;
 using Unity.Mathematics;
-using Unity.Physics;
 using Unity.Collections;
 using Unity.Transforms;
 using Unity.Burst;

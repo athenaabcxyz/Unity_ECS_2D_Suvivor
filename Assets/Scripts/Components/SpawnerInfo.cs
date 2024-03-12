@@ -5,8 +5,10 @@ using UnityEngine;
 
 public struct SpawnerInfo : IComponentData
 {
-    public int BigFishQuantity;
-    public int MidFishQuantity;
-    public int DartFishQuantity;
-    public Entity enemy;
+    public int Grimonk_BrownSpawnQuatity;
+    public int Hedusa_GreenSpawnQuatity;
+    public int MudRock_BrownSpawnQuatity;
+    public Entity Grimonk_Brown;
+    public Entity Hedusa_Green;
+    public Entity MudRock_Brown;
 }

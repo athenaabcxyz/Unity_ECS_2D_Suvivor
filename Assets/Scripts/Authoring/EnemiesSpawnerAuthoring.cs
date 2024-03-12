@@ -5,26 +5,16 @@ using Unity.Entities;
 
 public class EnemiesSpawnerAuthoring : MonoBehaviour
 {
-    public float BigDishMoveSpeed = 0.5f;
-    public float BigFishMoveSpeedChase = 1f;
-    public int maxHitPointBigFish = 15;
-    public int damageBigFish = 1;
 
-    public float MidDishMoveSpeed = 0.5f;
-    public float MidFishMoveSpeedChase = 1f;
-    public int maxHitPointMidFish = 10;
-    public int damageMidFish = 2;
+    public int Grimonk_BrownSpawnQuatity;
+    public GameObject Grimonk_Brown;
 
-    public float DartDishMoveSpeed = 1f;
-    public float DartFishMoveSpeedChase = 1.5f;
-    public int maxHitPointDartFish = 5;
-    public int damageDartFish = 1;
+    public int Hedusa_GreenSpawnQuatity;
+    public GameObject Hedusa_Green;
 
-    public int BigFishQuantity;
-    public int MidFishQuantity;
-    public int DartFishQuantity;
+    public int MudRock_BrownSpawnQuatity;
+    public GameObject MudRock_Brown;
 
-    [SerializeField] GameObject enemyPrefab;
 
     public class Baker : Baker<EnemiesSpawnerAuthoring>
     {
@@ -33,32 +23,13 @@ public class EnemiesSpawnerAuthoring : MonoBehaviour
             var entity = GetEntity(TransformUsageFlags.Dynamic);
             AddComponent(entity, new SpawnerInfo
             {
-                BigFishQuantity = authoring.BigFishQuantity,
-                MidFishQuantity = authoring.MidFishQuantity,
-                DartFishQuantity = authoring.DartFishQuantity,
-                enemy = GetEntity(authoring.enemyPrefab, TransformUsageFlags.Dynamic),
-            });
-            AddComponent(entity, new BigFishInfo
-            {
-                moveSpeed = authoring.BigDishMoveSpeed,
-                moveSpeedUp = authoring.BigFishMoveSpeedChase,
-                maxHitPoint = authoring.maxHitPointBigFish,
-                damage = authoring.damageBigFish
-            });
-            AddComponent(entity, new MidFishInfo
-            {
-                moveSpeed = authoring.MidDishMoveSpeed,
-                moveSpeedUp = authoring.MidFishMoveSpeedChase,
-                maxHitPoint = authoring.maxHitPointMidFish,
-                damage = authoring.damageMidFish
-            });
-            AddComponent(entity, new DartFishInfo
-            {
-                moveSpeed = authoring.DartDishMoveSpeed,
-                moveSpeedUp = authoring.DartFishMoveSpeedChase,
-                maxHitPoint = authoring.maxHitPointDartFish,
-                damage = authoring.damageDartFish
-            });
+                Grimonk_BrownSpawnQuatity = authoring.Grimonk_BrownSpawnQuatity,
+                Hedusa_GreenSpawnQuatity = authoring.Hedusa_GreenSpawnQuatity,
+                MudRock_BrownSpawnQuatity = authoring.MudRock_BrownSpawnQuatity,
+                Grimonk_Brown = GetEntity(authoring.Grimonk_Brown, TransformUsageFlags.Dynamic),
+                Hedusa_Green = GetEntity(authoring.Hedusa_Green, TransformUsageFlags.Dynamic),
+                MudRock_Brown = GetEntity(authoring.MudRock_Brown, TransformUsageFlags.Dynamic),
+            });           
         }
     }
 }

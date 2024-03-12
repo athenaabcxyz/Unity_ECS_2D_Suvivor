@@ -11,8 +11,8 @@ public class CameraController : MonoBehaviour {
 
     private EntityManager entityManager;
 
-    public float maxXSize = 43f;
-    public float minXSize = -43f;
+    public float maxXSize = 42f;
+    public float minXSize = -42f;
     public float maxYSize = 25;
     public float minYSize = -25f;
     private void Awake()
