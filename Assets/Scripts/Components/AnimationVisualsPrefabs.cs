@@ -6,5 +6,8 @@ using UnityEngine;
 
 public class AnimationVisualsPrefabs : IComponentData
 {
-    public List<AnimationVisualPrefabsSO> list;
+    public GameObject Player;
+    public GameObject BigFish;
+    public GameObject DartFish;
+    public GameObject MidFish;
 }

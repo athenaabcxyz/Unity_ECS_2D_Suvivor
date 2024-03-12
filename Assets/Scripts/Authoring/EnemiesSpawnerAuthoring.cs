@@ -2,33 +2,62 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Entities;
-using Unity.Collections;
-using System;
 
 public class EnemiesSpawnerAuthoring : MonoBehaviour
 {
-    public List<SpawnComponentSO> spawnComponents = new List<SpawnComponentSO>();
+    public float BigDishMoveSpeed = 0.5f;
+    public float BigFishMoveSpeedChase = 1f;
+    public int maxHitPointBigFish = 15;
+    public int damageBigFish = 1;
+
+    public float MidDishMoveSpeed = 0.5f;
+    public float MidFishMoveSpeedChase = 1f;
+    public int maxHitPointMidFish = 10;
+    public int damageMidFish = 2;
+
+    public float DartDishMoveSpeed = 1f;
+    public float DartFishMoveSpeedChase = 1.5f;
+    public int maxHitPointDartFish = 5;
+    public int damageDartFish = 1;
+
+    public int BigFishQuantity;
+    public int MidFishQuantity;
+    public int DartFishQuantity;
+
+    [SerializeField] GameObject enemyPrefab;
 
     public class Baker : Baker<EnemiesSpawnerAuthoring>
     {
-
         public override void Bake(EnemiesSpawnerAuthoring authoring)
         {
-            NativeArray<SpawnComponentInfo> nativeList = new NativeArray<SpawnComponentInfo>(authoring.spawnComponents.Count, Allocator.Temp);
-
-            for (int i = 0; i < authoring.spawnComponents.Count; i++)
-            {
-                nativeList[i] = new SpawnComponentInfo
-                {
-                    spawnQuantities = authoring.spawnComponents[i].quantity,
-                    enemiesPrefab = GetEntity(authoring.spawnComponents[i].prefab, TransformUsageFlags.Dynamic),
-                };
-            }
             var entity = GetEntity(TransformUsageFlags.Dynamic);
-
             AddComponent(entity, new SpawnerInfo
             {
-                spawnInfo = nativeList,
+                BigFishQuantity = authoring.BigFishQuantity,
+                MidFishQuantity = authoring.MidFishQuantity,
+                DartFishQuantity = authoring.DartFishQuantity,
+                enemy = GetEntity(authoring.enemyPrefab, TransformUsageFlags.Dynamic),
+            });
+            AddComponent(entity, new BigFishInfo
+            {
+                moveSpeed = authoring.BigDishMoveSpeed,
+                moveSpeedUp = authoring.BigFishMoveSpeedChase,
+                maxHitPoint = authoring.maxHitPointBigFish,
+                damage = authoring.damageBigFish
+            });
+            AddComponent(entity, new MidFishInfo
+            {
+                moveSpeed = authoring.MidDishMoveSpeed,
+                moveSpeedUp = authoring.MidFishMoveSpeedChase,
+                maxHitPoint = authoring.maxHitPointMidFish,
+                damage = authoring.damageMidFish
+            });
+            AddComponent(entity, new DartFishInfo
+            {
+                moveSpeed = authoring.DartDishMoveSpeed,
+                moveSpeedUp = authoring.DartFishMoveSpeedChase,
+                maxHitPoint = authoring.maxHitPointDartFish,
+                damage = authoring.damageDartFish
             });
         }
     }

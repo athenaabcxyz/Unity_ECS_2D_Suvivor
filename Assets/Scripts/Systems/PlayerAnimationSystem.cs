@@ -21,7 +21,7 @@ public partial struct PlayerAnimationSystem : ISystem
         {
             if(!state.EntityManager.HasComponent<VisualsReferenceComponent>(entity))
             {
-                GameObject playerVisual = Object.Instantiate(animationVisualsPrefabs.list[0].Prefabs);
+                GameObject playerVisual = Object.Instantiate(animationVisualsPrefabs.Player);
                 ecb.AddComponent(entity, new VisualsReferenceComponent { gameObject = playerVisual });
             }
             else
@@ -30,9 +30,9 @@ public partial struct PlayerAnimationSystem : ISystem
                 playerVisualRef.gameObject.transform.position = transform.ValueRO.Position;
                 playerVisualRef.gameObject.transform.rotation = transform.ValueRO.Rotation;
                 float2 staticPosition = new float2(0, 0);
-                if (state.EntityManager.HasComponent<ObjectMovementInfo>(entity))
+                if (state.EntityManager.HasComponent<PlayerMovementInfo>(entity))
                 {
-                    ObjectMovementInfo playerMovementInfo = state.EntityManager.GetComponentData<ObjectMovementInfo>(entity);
+                    PlayerMovementInfo playerMovementInfo = state.EntityManager.GetComponentData<PlayerMovementInfo>(entity);
                     if(playerMovementInfo.moveDirection.x!=0 || playerMovementInfo.moveDirection.y!=0)
                     {
                         playerVisualRef.gameObject.GetComponent<Animator>().SetBool("isMoving", true);

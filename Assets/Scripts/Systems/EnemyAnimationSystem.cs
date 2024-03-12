@@ -22,8 +22,20 @@ public partial struct EnemyAnimationSystem : ISystem
             if (!state.EntityManager.HasComponent<VisualsReferenceComponent>(entity))
             {
 
-                GameObject enemyVisual = Object.Instantiate(animationVisualsPrefabs.list[enemyInfo.ValueRO.enemiesType].Prefabs);
-
+                GameObject enemyVisual = new();
+                if(enemyInfo.ValueRO.enemiesType==0)
+                {
+                    enemyVisual = Object.Instantiate(animationVisualsPrefabs.BigFish);
+                }
+                else
+                    if (enemyInfo.ValueRO.enemiesType == 1)
+                {
+                    enemyVisual = Object.Instantiate(animationVisualsPrefabs.MidFish);
+                } else
+                if (enemyInfo.ValueRO.enemiesType == 2)
+                {
+                    enemyVisual = Object.Instantiate(animationVisualsPrefabs.DartFish);
+                }
                 ecb.AddComponent(entity, new VisualsReferenceComponent { gameObject = enemyVisual });
             }
             else

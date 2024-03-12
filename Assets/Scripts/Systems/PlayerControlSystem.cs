@@ -40,9 +40,9 @@ public partial struct PlayerControlSystem : ISystem
 
             Vector3 dir = mousePosition - Camera.main.WorldToScreenPoint(transform.ValueRO.Position);
 
-            if (!state.EntityManager.HasComponent<ObjectMovementInfo>(entity))
+            if (!state.EntityManager.HasComponent<PlayerMovementInfo>(entity))
             {
-                ecb.AddComponent(entity, new ObjectMovementInfo
+                ecb.AddComponent(entity, new PlayerMovementInfo
                 {
                     mouseAngle = GetAimDirection(GetAngleFromVector(dir)),
                     moveSpeed = player.ValueRO.Speed,
@@ -52,7 +52,7 @@ public partial struct PlayerControlSystem : ISystem
             else
             {
 
-                state.EntityManager.SetComponentData(entity, new ObjectMovementInfo
+                state.EntityManager.SetComponentData(entity, new PlayerMovementInfo
                 {
                     moveDirection = new float2(input.x, input.y),
                     mouseAngle = GetAimDirection(GetAngleFromVector(dir)),
