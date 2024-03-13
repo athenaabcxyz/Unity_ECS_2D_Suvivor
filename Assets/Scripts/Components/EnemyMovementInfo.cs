@@ -8,4 +8,5 @@ public struct EnemyMovementInfo : IComponentData
 {
     public float2 moveDirection;
     public float moveSpeed;
+    public RotationEnum mouseAngle;
 }

@@ -31,7 +31,7 @@ public partial struct EnemyAttackSystem : ISystem
             {
                 if (SystemAPI.Time.ElapsedTime > nextHitTime)
                 {
-                    if (math.distance(transform.ValueRW.Position, playerPosition) <= 0.4f)
+                    if (math.distance(transform.ValueRW.Position, playerPosition) <= 1f)
                     {
                         if(!state.EntityManager.HasComponent<PlayerAttackedFlag>(player))
                         {

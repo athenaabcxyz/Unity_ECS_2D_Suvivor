@@ -11,3 +11,4 @@ public struct PlayerInfoComponent : IComponentData
     public float hitCoolDown;
 }
 
+

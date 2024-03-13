@@ -69,44 +69,44 @@ public partial struct PlayerControlSystem : ISystem
     }
 
     [BurstCompile]
-    public MouseRotationEnum GetAimDirection(float angleDegrees)
+    public RotationEnum GetAimDirection(float angleDegrees)
     {
-        MouseRotationEnum aimDirection;
+        RotationEnum aimDirection;
 
         // Set player direction
         //Up Right
         if (angleDegrees >= 22f && angleDegrees <= 67f)
         {
-            aimDirection = MouseRotationEnum.aimUpRight;
+            aimDirection = RotationEnum.aimUpRight;
         }
         // Up
         else if (angleDegrees > 67f && angleDegrees <= 112f)
         {
-            aimDirection = MouseRotationEnum.aimUp;
+            aimDirection = RotationEnum.aimUp;
         }
         // Up Left
         else if (angleDegrees > 112f && angleDegrees <= 158f)
         {
-            aimDirection = MouseRotationEnum.aimUpLeft;
+            aimDirection = RotationEnum.aimUpLeft;
         }
         // Left
         else if ((angleDegrees <= 180f && angleDegrees > 158f) || (angleDegrees > -180 && angleDegrees <= -135f))
         {
-            aimDirection = MouseRotationEnum.aimLeft;
+            aimDirection = RotationEnum.aimLeft;
         }
         // Down
         else if ((angleDegrees > -135f && angleDegrees <= -45f))
         {
-            aimDirection = MouseRotationEnum.aimDown;
+            aimDirection = RotationEnum.aimDown;
         }
         // Right
         else if ((angleDegrees > -45f && angleDegrees <= 0f) || (angleDegrees > 0 && angleDegrees < 22f))
         {
-            aimDirection = MouseRotationEnum.aimRight;
+            aimDirection = RotationEnum.aimRight;
         }
         else
         {
-            aimDirection = MouseRotationEnum.aimRight;
+            aimDirection = RotationEnum.aimRight;
         }
 
         return aimDirection;

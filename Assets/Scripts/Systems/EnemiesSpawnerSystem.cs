@@ -14,11 +14,37 @@ public partial struct EnemiesSpawnerSystem : ISystem
 {
     private Random random;
     private uint updateCount;
+    private NativeArray<float2> spawnPositionList;
 
     [BurstCompile]
     public void OnCreate(ref SystemState state)
     {
         state.RequireForUpdate<SpawnerInfo>();
+        spawnPositionList = new NativeArray<float2>(24, Allocator.Persistent);
+        spawnPositionList[0] = new float2(-60, 35);
+        spawnPositionList[1] = new float2(-45, 35);
+        spawnPositionList[2] = new float2(-30, 35);
+        spawnPositionList[3] = new float2(-15, 35);
+        spawnPositionList[4] = new float2(0, 35);
+        spawnPositionList[5] = new float2(15, 35);
+        spawnPositionList[6] = new float2(30, 35);
+        spawnPositionList[7] = new float2(45, 35);
+        spawnPositionList[8] = new float2(60, 35);
+        spawnPositionList[9] = new float2(-60, -35);
+        spawnPositionList[10] = new float2(-45, -35);
+        spawnPositionList[11] = new float2(-30, -35);
+        spawnPositionList[12] = new float2(-15, -35);
+        spawnPositionList[13] = new float2(0, -35);
+        spawnPositionList[14] = new float2(15, -35);
+        spawnPositionList[15] = new float2(30, -35);
+        spawnPositionList[16] = new float2(45, -35);
+        spawnPositionList[17] = new float2(60, -35);
+        spawnPositionList[18] = new float2(-60, 17.5f);
+        spawnPositionList[19] = new float2(-60, 0);
+        spawnPositionList[20] = new float2(60, -17.5f);
+        spawnPositionList[21] = new float2(60, 17.5f);
+        spawnPositionList[22] = new float2(60, 0);
+
         random = Random.CreateFromIndex(updateCount++);
     }
 
@@ -30,36 +56,125 @@ public partial struct EnemiesSpawnerSystem : ISystem
         {
             if (SystemAPI.TryGetSingleton(out SpawnerInfo enemiesSpawner))
             {
-                var Grimonk_BrownArray = new NativeArray<Entity>(enemiesSpawner.Grimonk_BrownSpawnQuatity, Allocator.Temp);
-                var Hedusa_GreenArray = new NativeArray<Entity>(enemiesSpawner.Hedusa_GreenSpawnQuatity, Allocator.Temp);
-                var MudRock_BrownArray = new NativeArray<Entity>(enemiesSpawner.MudRock_BrownSpawnQuatity, Allocator.Temp);
+                if (enemiesSpawner.Grimonk_BrownSpawnQuatity > 0)
+                {
+                    var Grimonk_BrownArray = new NativeArray<Entity>(enemiesSpawner.Grimonk_BrownSpawnQuatity, Allocator.Temp);
+                    state.EntityManager.Instantiate(enemiesSpawner.Grimonk_Brown, Grimonk_BrownArray);
+                    foreach (var entity in Grimonk_BrownArray)
+                    {
+                        var enemy = SystemAPI.GetComponentRW<EnemiesInfo>(entity);
+                        enemy.ValueRW.random = Random.CreateFromIndex((uint)entity.Index);
+                    }
+                }
+
+                if (enemiesSpawner.Hedusa_BlueSpawnQuatity > 0)
+                {
+                    var Hedusa_BlueArray = new NativeArray<Entity>(enemiesSpawner.Hedusa_BlueSpawnQuatity, Allocator.Temp);
+                    state.EntityManager.Instantiate(enemiesSpawner.Hedusa_Blue, Hedusa_BlueArray);
+                    foreach (var entity in Hedusa_BlueArray)
+                    {
+                        var enemy = SystemAPI.GetComponentRW<EnemiesInfo>(entity);
+                        enemy.ValueRW.random = Random.CreateFromIndex((uint)entity.Index);
+                    }
+                }
+
+                if (enemiesSpawner.Hedusa_GreenSpawnQuatity > 0)
+                {
+                    var Hedusa_GreenArray = new NativeArray<Entity>(enemiesSpawner.Hedusa_GreenSpawnQuatity, Allocator.Temp);
+                    state.EntityManager.Instantiate(enemiesSpawner.Hedusa_Green, Hedusa_GreenArray);
+                    foreach (var entity in Hedusa_GreenArray)
+                    {
+                        var enemy = SystemAPI.GetComponentRW<EnemiesInfo>(entity);
+                        enemy.ValueRW.random = Random.CreateFromIndex((uint)entity.Index);
+                    }
+                }
+
+                if (enemiesSpawner.Hedusa_RedSpawnQuatity > 0)
+                {
+                    var Hedusa_RedArray = new NativeArray<Entity>(enemiesSpawner.Hedusa_RedSpawnQuatity, Allocator.Temp);
+                    state.EntityManager.Instantiate(enemiesSpawner.Hedusa_Red, Hedusa_RedArray);
+                    foreach (var entity in Hedusa_RedArray)
+                    {
+                        var enemy = SystemAPI.GetComponentRW<EnemiesInfo>(entity);
+                        enemy.ValueRW.random = Random.CreateFromIndex((uint)entity.Index);
+                    }
+                }
+
+                if (enemiesSpawner.MudRock_BrownSpawnQuatity > 0)
+                {
+                    var Array = new NativeArray<Entity>(enemiesSpawner.MudRock_BrownSpawnQuatity, Allocator.Temp);
+                    state.EntityManager.Instantiate(enemiesSpawner.MudRock_Brown, Array);
+                    foreach (var entity in Array)
+                    {
+                        var enemy = SystemAPI.GetComponentRW<EnemiesInfo>(entity);
+                        enemy.ValueRW.random = Random.CreateFromIndex((uint)entity.Index);
+                    }
+                }
+
+                if (enemiesSpawner.Orc_FleshSpawnQuatity > 0)
+                {
+                    var Array = new NativeArray<Entity>(enemiesSpawner.Orc_FleshSpawnQuatity, Allocator.Temp);
+                    state.EntityManager.Instantiate(enemiesSpawner.Orc_Flesh, Array);
+                    foreach (var entity in Array)
+                    {
+                        var enemy = SystemAPI.GetComponentRW<EnemiesInfo>(entity);
+                        enemy.ValueRW.random = Random.CreateFromIndex((uint)entity.Index);
+                    }
+                }
+
+                if (enemiesSpawner.SlimeBlock_BlueSpawnQuatity > 0)
+                {
+                    var Array = new NativeArray<Entity>(enemiesSpawner.SlimeBlock_BlueSpawnQuatity, Allocator.Temp);
+                    state.EntityManager.Instantiate(enemiesSpawner.SlimeBlock_Blue, Array);
+                    foreach (var entity in Array)
+                    {
+                        var enemy = SystemAPI.GetComponentRW<EnemiesInfo>(entity);
+                        enemy.ValueRW.random = Random.CreateFromIndex((uint)entity.Index);
+                    }
+                }
+
+                if (enemiesSpawner.SlimeBlock_GreenSpawnQuatity > 0)
+                {
+                    var Array = new NativeArray<Entity>(enemiesSpawner.SlimeBlock_GreenSpawnQuatity, Allocator.Temp);
+                    state.EntityManager.Instantiate(enemiesSpawner.SlimeBlock_Blue, Array);
+                    foreach (var entity in Array)
+                    {
+                        var enemy = SystemAPI.GetComponentRW<EnemiesInfo>(entity);
+                        enemy.ValueRW.random = Random.CreateFromIndex((uint)entity.Index);
+                    }
+                }
+
+                if (enemiesSpawner.SlimeBlock_RedSpawnQuatity > 0)
+                {
+                    var Array = new NativeArray<Entity>(enemiesSpawner.SlimeBlock_RedSpawnQuatity, Allocator.Temp);
+                    state.EntityManager.Instantiate(enemiesSpawner.SlimeBlock_Red, Array);
+                    foreach (var entity in Array)
+                    {
+                        var enemy = SystemAPI.GetComponentRW<EnemiesInfo>(entity);
+                        enemy.ValueRW.random = Random.CreateFromIndex((uint)entity.Index);
+                    }
+                }
+
+                if (enemiesSpawner.SlizzardSpawnQuatity > 0)
+                {
+                    var Array = new NativeArray<Entity>(enemiesSpawner.SlizzardSpawnQuatity, Allocator.Temp);
+                    state.EntityManager.Instantiate(enemiesSpawner.Slizzard, Array);
+                    foreach (var entity in Array)
+                    {
+                        var enemy = SystemAPI.GetComponentRW<EnemiesInfo>(entity);
+                        enemy.ValueRW.random = Random.CreateFromIndex((uint)entity.Index);
+                    }
+                }
 
 
-                state.EntityManager.Instantiate(enemiesSpawner.Grimonk_Brown, Grimonk_BrownArray);
-                state.EntityManager.Instantiate(enemiesSpawner.Hedusa_Green, Hedusa_GreenArray);
-                state.EntityManager.Instantiate(enemiesSpawner.MudRock_Brown, MudRock_BrownArray);
-                foreach (var entity in Grimonk_BrownArray)
-                {
-                    var enemy = SystemAPI.GetComponentRW<EnemiesInfo>(entity);
-                    enemy.ValueRW.random = Random.CreateFromIndex((uint)entity.Index);
-                }
-                foreach (var entity in Hedusa_GreenArray)
-                {
-                    var enemy = SystemAPI.GetComponentRW<EnemiesInfo>(entity);
-                    enemy.ValueRW.random = Random.CreateFromIndex((uint)entity.Index);
-                }
-                foreach (var entity in MudRock_BrownArray)
-                {
-                    var enemy = SystemAPI.GetComponentRW<EnemiesInfo>(entity);
-                    enemy.ValueRW.random = Random.CreateFromIndex((uint)entity.Index);
-                }
+
 
                 var bigFishSpawnJob = new FishSpawnJob
                 {
                     spawnerInfo = enemiesSpawner,
-                   
+                    spawnPositionList = spawnPositionList,
                 };
-                bigFishSpawnJob.ScheduleParallel();
+                bigFishSpawnJob.Schedule();
                 state.Dependency.Complete();
             }
         }
@@ -69,12 +184,13 @@ public partial struct EnemiesSpawnerSystem : ISystem
     public partial struct FishSpawnJob : IJobEntity
     {
         public SpawnerInfo spawnerInfo;
+        public NativeArray<float2> spawnPositionList;
 
         readonly void Execute(ref LocalTransform transform, ref EnemiesInfo enemy, Entity entity)
         {
-            float2 newPosition = (enemy.random.NextFloat2(new float2(-40, -20), new float2(40, 20)));
+            int positionSelection = (enemy.random.NextInt(0, 23));
 
-            transform.Position = new float3(newPosition.x, newPosition.y, 0);
+            transform.Position = new float3(spawnPositionList[positionSelection].x, spawnPositionList[positionSelection].y, 0);
             transform.Rotation = quaternion.identity;          
         }
     }
