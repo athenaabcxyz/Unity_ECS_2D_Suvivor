@@ -1,2 +1,2 @@
 # Unity_ECS_2D_Suvivor
-This is an 2D Suvivor-like game to demonstrate ECS power
+This is a 2D Survivor-like game to test ECS power
