@@ -7,7 +7,7 @@ public class BulletAuthoring : MonoBehaviour
 {
     public int BulletDamage;
     public float BulletSpeed;
-
+    public GameObject healthPrefab;
     public class Baker : Baker<BulletAuthoring>
     {
         public override void Bake(BulletAuthoring authoring)
@@ -16,9 +16,13 @@ public class BulletAuthoring : MonoBehaviour
             AddComponent(Entity, new BulletInfo
             {
                 bulletSpeed = authoring.BulletSpeed,
-                deliveryDamage = authoring.BulletDamage
+                deliveryDamage = authoring.BulletDamage,               
             });
             AddComponent(Entity, new BulletMovementInfo());
+            AddComponent(Entity, new HealthOnBulletInfo
+            {
+                healthPrefab = GetEntity(authoring.healthPrefab, TransformUsageFlags.Dynamic)
+            });
         }
     }
 }

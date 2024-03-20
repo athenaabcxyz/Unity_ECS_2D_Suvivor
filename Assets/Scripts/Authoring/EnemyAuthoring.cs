@@ -24,7 +24,7 @@ public class EnemyAuthoring : MonoBehaviour
                 currentHitPoint = authoring.currentHitPoint,
                 damage = authoring.damage,
                 random = Random.CreateFromIndex((uint)entity.GetHashCode()),
-            });
+            }) ;
         }
     }
 }

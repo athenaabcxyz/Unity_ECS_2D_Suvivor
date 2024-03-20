@@ -11,4 +11,10 @@ public struct PlayerInfoComponent : IComponentData
     public float hitCoolDown;
 }
 
+public struct PlayerCompanionsInfo: IComponentData
+{
+    public Entity theScientist;
+    public Entity theThief;
+}
+
 

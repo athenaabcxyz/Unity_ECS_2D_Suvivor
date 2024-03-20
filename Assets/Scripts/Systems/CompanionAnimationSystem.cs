@@ -6,22 +6,22 @@ using Unity.Collections;
 using Unity.Transforms;
 using Unity.Mathematics;
 
-public partial struct PlayerAnimationSystem : ISystem
+public partial struct CompanionAnimationSystem : ISystem
 {
     public void OnUpdate(ref SystemState state)
     {
-        if(!SystemAPI.ManagedAPI.TryGetSingleton(out AnimationVisualsPrefabs animationVisualsPrefabs))
+        if (!SystemAPI.ManagedAPI.TryGetSingleton(out AnimationVisualsPrefabs animationVisualsPrefabs))
         {
             return;
         }
 
         EntityCommandBuffer ecb = new EntityCommandBuffer(Allocator.Temp);
 
-        foreach(var(transform, playerInfo, entity) in SystemAPI.Query<RefRW<LocalTransform>, RefRW<PlayerInfoComponent>>().WithEntityAccess())
+        foreach (var (transform, companion, movement, entity) in SystemAPI.Query<RefRW<LocalTransform>, RefRW<CompanionInfo>, RefRW<CompanionMovementInfo>>().WithEntityAccess())
         {
-            if(!state.EntityManager.HasComponent<VisualsReferenceComponent>(entity))
+            if (!state.EntityManager.HasComponent<VisualsReferenceComponent>(entity))
             {
-                GameObject playerVisual = Object.Instantiate(animationVisualsPrefabs.VisualPrefab[0]);
+                GameObject playerVisual = Object.Instantiate(animationVisualsPrefabs.VisualPrefab[companion.ValueRO.companionType]);
                 ecb.AddComponent(entity, new VisualsReferenceComponent { gameObject = playerVisual });
             }
             else
@@ -29,10 +29,13 @@ public partial struct PlayerAnimationSystem : ISystem
                 VisualsReferenceComponent playerVisualRef = state.EntityManager.GetComponentData<VisualsReferenceComponent>(entity);
                 playerVisualRef.gameObject.transform.position = transform.ValueRO.Position;
                 playerVisualRef.gameObject.transform.rotation = transform.ValueRO.Rotation;
-                if (state.EntityManager.HasComponent<PlayerMovementInfo>(entity))
+                if (state.EntityManager.HasComponent<CompanionMovementInfo>(entity))
                 {
-                    PlayerMovementInfo playerMovementInfo = state.EntityManager.GetComponentData<PlayerMovementInfo>(entity);
-                    if(playerMovementInfo.moveDirection.x!=0 || playerMovementInfo.moveDirection.y!=0)
+                    CompanionMovementInfo playerMovementInfo = state.EntityManager.GetComponentData<CompanionMovementInfo>(entity);
+                    CurrentTarget target = state.EntityManager.GetComponentData<CurrentTarget>(entity);
+                    var horizontalInput = Input.GetAxis("Horizontal");
+                    var verticalInput = Input.GetAxis("Vertical");
+                    if (horizontalInput != 0 || verticalInput != 0)
                     {
                         playerVisualRef.gameObject.GetComponent<Animator>().SetBool("isMoving", true);
                         playerVisualRef.gameObject.GetComponent<Animator>().SetBool("isIdle", false);
@@ -43,11 +46,12 @@ public partial struct PlayerAnimationSystem : ISystem
                         playerVisualRef.gameObject.GetComponent<Animator>().SetBool("isMoving", false);
                         playerVisualRef.gameObject.GetComponent<Animator>().SetBool("isIdle", true);
                     }
-                    var playerWeaponBehaviorComponent = playerVisualRef.gameObject.GetComponent<PlayerWeaponBehavior>();
-                    var weaponShootPosition = (float3) playerWeaponBehaviorComponent.GetShootPosition();
-                    var weaponPosition = (float3) playerWeaponBehaviorComponent.GetWeaponPosition();    
-                    var weaponDirection = playerMovementInfo.mousePosition - (float3)Camera.main.WorldToScreenPoint(weaponPosition);
 
+                    var playerWeaponBehaviorComponent = playerVisualRef.gameObject.GetComponent<PlayerWeaponBehavior>();
+                    var weaponShootPosition = (float3)playerWeaponBehaviorComponent.GetShootPosition();
+                    var weaponPosition = (float3)playerWeaponBehaviorComponent.GetWeaponPosition();
+                    var weaponDirection = target.currentTarget - (float3)weaponPosition;
+                    movement.ValueRW.aimDirection = GetAimDirection(GetAngleFromVector(weaponDirection));
                     if (!state.EntityManager.HasComponent<CurrentWeaponInfo>(entity))
                     {
                         ecb.AddComponent(entity, new CurrentWeaponInfo
@@ -64,7 +68,7 @@ public partial struct PlayerAnimationSystem : ISystem
                             weaponShootDirection = weaponDirection,
                         });
                     }
-                    switch (playerMovementInfo.mouseAngle)
+                    switch (playerMovementInfo.aimDirection)
                     {
                         case RotationEnum.aimUp:
                             playerVisualRef.gameObject.GetComponent<Animator>().SetBool("aimUp", true);
@@ -74,6 +78,7 @@ public partial struct PlayerAnimationSystem : ISystem
                             playerVisualRef.gameObject.GetComponent<Animator>().SetBool("aimUpLeft", false);
                             playerVisualRef.gameObject.GetComponent<Animator>().SetBool("aimUpRight", false);
                             playerWeaponBehaviorComponent.Aim(RotationEnum.aimUp, GetAngleFromVector(weaponDirection));
+
                             break;
                         case RotationEnum.aimDown:
                             playerVisualRef.gameObject.GetComponent<Animator>().SetBool("aimUp", false);
@@ -82,7 +87,7 @@ public partial struct PlayerAnimationSystem : ISystem
                             playerVisualRef.gameObject.GetComponent<Animator>().SetBool("aimLeft", false);
                             playerVisualRef.gameObject.GetComponent<Animator>().SetBool("aimUpLeft", false);
                             playerVisualRef.gameObject.GetComponent<Animator>().SetBool("aimUpRight", false);
-                            playerWeaponBehaviorComponent.Aim(RotationEnum.aimDown, GetAngleFromVector(weaponDirection));
+                            playerWeaponBehaviorComponent.Aim(RotationEnum.aimUp, GetAngleFromVector(weaponDirection));
                             break;
                         case RotationEnum.aimRight:
                             playerVisualRef.gameObject.GetComponent<Animator>().SetBool("aimUp", false);
@@ -91,7 +96,7 @@ public partial struct PlayerAnimationSystem : ISystem
                             playerVisualRef.gameObject.GetComponent<Animator>().SetBool("aimLeft", false);
                             playerVisualRef.gameObject.GetComponent<Animator>().SetBool("aimUpLeft", false);
                             playerVisualRef.gameObject.GetComponent<Animator>().SetBool("aimUpRight", false);
-                            playerWeaponBehaviorComponent.Aim(RotationEnum.aimRight, GetAngleFromVector(weaponDirection));
+                            playerWeaponBehaviorComponent.Aim(RotationEnum.aimUp, GetAngleFromVector(weaponDirection));
                             break;
                         case RotationEnum.aimLeft:
                             playerVisualRef.gameObject.GetComponent<Animator>().SetBool("aimUp", false);
@@ -100,7 +105,7 @@ public partial struct PlayerAnimationSystem : ISystem
                             playerVisualRef.gameObject.GetComponent<Animator>().SetBool("aimLeft", true);
                             playerVisualRef.gameObject.GetComponent<Animator>().SetBool("aimUpLeft", false);
                             playerVisualRef.gameObject.GetComponent<Animator>().SetBool("aimUpRight", false);
-                            playerWeaponBehaviorComponent.Aim(RotationEnum.aimLeft, GetAngleFromVector(weaponDirection));
+                            playerWeaponBehaviorComponent.Aim(RotationEnum.aimUp, GetAngleFromVector(weaponDirection));
                             break;
                         case RotationEnum.aimUpLeft:
                             playerVisualRef.gameObject.GetComponent<Animator>().SetBool("aimUp", false);
@@ -109,7 +114,7 @@ public partial struct PlayerAnimationSystem : ISystem
                             playerVisualRef.gameObject.GetComponent<Animator>().SetBool("aimLeft", false);
                             playerVisualRef.gameObject.GetComponent<Animator>().SetBool("aimUpLeft", true);
                             playerVisualRef.gameObject.GetComponent<Animator>().SetBool("aimUpRight", false);
-                            playerWeaponBehaviorComponent.Aim(RotationEnum.aimUpLeft, GetAngleFromVector(weaponDirection));
+                            playerWeaponBehaviorComponent.Aim(RotationEnum.aimUp, GetAngleFromVector(weaponDirection));
                             break;
                         case RotationEnum.aimUpRight:
                             playerVisualRef.gameObject.GetComponent<Animator>().SetBool("aimUp", false);
@@ -118,12 +123,12 @@ public partial struct PlayerAnimationSystem : ISystem
                             playerVisualRef.gameObject.GetComponent<Animator>().SetBool("aimLeft", false);
                             playerVisualRef.gameObject.GetComponent<Animator>().SetBool("aimUpLeft", false);
                             playerVisualRef.gameObject.GetComponent<Animator>().SetBool("aimUpRight", true);
-                            playerWeaponBehaviorComponent.Aim(RotationEnum.aimUpRight, GetAngleFromVector(weaponDirection));
+                            playerWeaponBehaviorComponent.Aim(RotationEnum.aimUp, GetAngleFromVector(weaponDirection));
                             break;
 
                     }
-                }         
-                   
+                }
+
             }
         }
         ecb.Playback(state.EntityManager);

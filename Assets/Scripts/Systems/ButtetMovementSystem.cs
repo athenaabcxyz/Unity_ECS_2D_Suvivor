@@ -1,20 +1,27 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
 
+
+[BurstCompile]
 public partial struct BulletMovementSystem : ISystem
 {
+
+    [BurstCompile]
     public void OnCreate(ref SystemState state)
     {
         state.RequireForUpdate<PlayerInfoComponent>();
     }
 
+    [BurstCompile]
     public void OnUpdate(ref SystemState state)
     {
+       
         var ecb = new EntityCommandBuffer(Allocator.TempJob);
         var ecbParallelWritter = ecb.AsParallelWriter();
         new BulletMovementJob
@@ -27,6 +34,7 @@ public partial struct BulletMovementSystem : ISystem
         ecb.Dispose();
     }
 
+    [BurstCompile]
     public partial struct BulletMovementJob: IJobEntity
     { 
         public EntityCommandBuffer.ParallelWriter ecb;

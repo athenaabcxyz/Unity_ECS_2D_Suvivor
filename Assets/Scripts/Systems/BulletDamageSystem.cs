@@ -5,19 +5,23 @@ using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 using Unity.Collections;
+using Unity.Burst;
 
+[BurstCompile]
 public partial struct BulletDamageSystem : ISystem
 {
+    [BurstCompile]
     public void OnCreate(ref SystemState state)
     {
         state.RequireForUpdate<BulletMovementInfo>();
     }
 
+    [BurstCompile]
     public void OnUpdate(ref SystemState state)
     {
 
         EntityCommandBuffer ecb = new EntityCommandBuffer(Allocator.Temp);
-        foreach (var (transform, info, bullet) in SystemAPI.Query<RefRW<LocalTransform>, RefRW<BulletInfo>>().WithEntityAccess())
+        foreach (var (transform, info, health,  bullet ) in SystemAPI.Query<RefRW<LocalTransform>, RefRW<BulletInfo>, RefRO<HealthOnBulletInfo>>().WithEntityAccess())
         {
             Entity closetEnemy = Entity.Null;
             float smalestDistance = 0.8f;
@@ -38,7 +42,8 @@ public partial struct BulletDamageSystem : ISystem
                 ecb.DestroyEntity(bullet);
                 ecb.AddComponent(closetEnemy, new BulletHitEnemyFlag
                 {
-                    damage = info.ValueRO.deliveryDamage
+                    damage = info.ValueRO.deliveryDamage,
+                    healthPrefab = health.ValueRO.healthPrefab,
                 });
             }
         }

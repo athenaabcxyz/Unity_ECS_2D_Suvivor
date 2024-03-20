@@ -172,6 +172,8 @@ MonoBehaviour:
   hitCoolDown: 1
   buttletPrefab: {fileID: 1501612262009173722, guid: eec791af477965c4ba26e1a0267f246d, type: 3}
   weaponShotICD: 0.5
+  theScientist: {fileID: 4730543314200807519, guid: 7ae035902a118f34fbba5656399e9f87, type: 3}
+  theThief: {fileID: 4730543314200807519, guid: 958b1a3243a704143b187fba7c636c00, type: 3}
 --- !u!1 &186080684
 GameObject:
   m_ObjectHideFlags: 0
@@ -228,6 +230,8 @@ MonoBehaviour:
   - {fileID: 4190316793189156971, guid: bce0b613311d65f4992107ba655c2b85, type: 3}
   - {fileID: 5681276290337219884, guid: 0cbc0156c5295604aa3990da88e7cbfd, type: 3}
   - {fileID: 3612535418984673539, guid: 6a6e1582888159541a4f2275cebaaffd, type: 3}
+  - {fileID: 4223291587891147767, guid: f1e75e0ceb5374c48a4f6a3d36a7a58a, type: 3}
+  - {fileID: 4223291587891147767, guid: 8e22bc46d4c1bdf459557ed57777a176, type: 3}
 --- !u!1 &1844700717
 GameObject:
   m_ObjectHideFlags: 0

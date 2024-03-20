@@ -12,6 +12,7 @@ using Random = Unity.Mathematics.Random;
 [BurstCompile]
 public partial struct EnemiesSpawnerSystem : ISystem
 {
+    private int currentLevel;
     private Random random;
     private uint updateCount;
     private NativeArray<float2> spawnPositionList;
@@ -19,6 +20,7 @@ public partial struct EnemiesSpawnerSystem : ISystem
     [BurstCompile]
     public void OnCreate(ref SystemState state)
     {
+        currentLevel = 0;
         state.RequireForUpdate<SpawnerInfo>();
         spawnPositionList = new NativeArray<float2>(24, Allocator.Persistent);
         spawnPositionList[0] = new float2(-60, 35);
@@ -54,14 +56,16 @@ public partial struct EnemiesSpawnerSystem : ISystem
         var enemiesQuery = SystemAPI.QueryBuilder().WithAll<EnemiesInfo>().Build();
         if (enemiesQuery.IsEmpty)
         {
+            currentLevel += 1;
             if (SystemAPI.TryGetSingleton(out SpawnerInfo enemiesSpawner))
             {
                 if (enemiesSpawner.Grimonk_BrownSpawnQuatity > 0)
                 {
-                    var Grimonk_BrownArray = new NativeArray<Entity>(enemiesSpawner.Grimonk_BrownSpawnQuatity, Allocator.Temp);
+                    var Grimonk_BrownArray = new NativeArray<Entity>(Mathf.RoundToInt(enemiesSpawner.Grimonk_BrownSpawnQuatity*currentLevel*1.25f), Allocator.Temp);
                     state.EntityManager.Instantiate(enemiesSpawner.Grimonk_Brown, Grimonk_BrownArray);
                     foreach (var entity in Grimonk_BrownArray)
                     {
+                        
                         var enemy = SystemAPI.GetComponentRW<EnemiesInfo>(entity);
                         enemy.ValueRW.random = Random.CreateFromIndex((uint)entity.Index);
                     }
@@ -69,7 +73,7 @@ public partial struct EnemiesSpawnerSystem : ISystem
 
                 if (enemiesSpawner.Hedusa_BlueSpawnQuatity > 0)
                 {
-                    var Hedusa_BlueArray = new NativeArray<Entity>(enemiesSpawner.Hedusa_BlueSpawnQuatity, Allocator.Temp);
+                    var Hedusa_BlueArray = new NativeArray<Entity>(Mathf.RoundToInt(enemiesSpawner.Hedusa_BlueSpawnQuatity*currentLevel*1.25f), Allocator.Temp);
                     state.EntityManager.Instantiate(enemiesSpawner.Hedusa_Blue, Hedusa_BlueArray);
                     foreach (var entity in Hedusa_BlueArray)
                     {
@@ -80,7 +84,7 @@ public partial struct EnemiesSpawnerSystem : ISystem
 
                 if (enemiesSpawner.Hedusa_GreenSpawnQuatity > 0)
                 {
-                    var Hedusa_GreenArray = new NativeArray<Entity>(enemiesSpawner.Hedusa_GreenSpawnQuatity, Allocator.Temp);
+                    var Hedusa_GreenArray = new NativeArray<Entity>(Mathf.RoundToInt(enemiesSpawner.Hedusa_GreenSpawnQuatity * currentLevel * 1.25f), Allocator.Temp);
                     state.EntityManager.Instantiate(enemiesSpawner.Hedusa_Green, Hedusa_GreenArray);
                     foreach (var entity in Hedusa_GreenArray)
                     {
@@ -91,7 +95,7 @@ public partial struct EnemiesSpawnerSystem : ISystem
 
                 if (enemiesSpawner.Hedusa_RedSpawnQuatity > 0)
                 {
-                    var Hedusa_RedArray = new NativeArray<Entity>(enemiesSpawner.Hedusa_RedSpawnQuatity, Allocator.Temp);
+                    var Hedusa_RedArray = new NativeArray<Entity>(Mathf.RoundToInt(enemiesSpawner.Hedusa_RedSpawnQuatity * currentLevel * 1.25f), Allocator.Temp);
                     state.EntityManager.Instantiate(enemiesSpawner.Hedusa_Red, Hedusa_RedArray);
                     foreach (var entity in Hedusa_RedArray)
                     {
@@ -102,7 +106,7 @@ public partial struct EnemiesSpawnerSystem : ISystem
 
                 if (enemiesSpawner.MudRock_BrownSpawnQuatity > 0)
                 {
-                    var Array = new NativeArray<Entity>(enemiesSpawner.MudRock_BrownSpawnQuatity, Allocator.Temp);
+                    var Array = new NativeArray<Entity>(Mathf.RoundToInt(enemiesSpawner.MudRock_BrownSpawnQuatity * currentLevel * 1.25f), Allocator.Temp);
                     state.EntityManager.Instantiate(enemiesSpawner.MudRock_Brown, Array);
                     foreach (var entity in Array)
                     {
@@ -113,7 +117,7 @@ public partial struct EnemiesSpawnerSystem : ISystem
 
                 if (enemiesSpawner.Orc_FleshSpawnQuatity > 0)
                 {
-                    var Array = new NativeArray<Entity>(enemiesSpawner.Orc_FleshSpawnQuatity, Allocator.Temp);
+                    var Array = new NativeArray<Entity>(Mathf.RoundToInt(enemiesSpawner.Orc_FleshSpawnQuatity + enemiesSpawner.Orc_FleshSpawnQuatity * (currentLevel-1) * 0.25f), Allocator.Temp);
                     state.EntityManager.Instantiate(enemiesSpawner.Orc_Flesh, Array);
                     foreach (var entity in Array)
                     {
@@ -124,7 +128,7 @@ public partial struct EnemiesSpawnerSystem : ISystem
 
                 if (enemiesSpawner.SlimeBlock_BlueSpawnQuatity > 0)
                 {
-                    var Array = new NativeArray<Entity>(enemiesSpawner.SlimeBlock_BlueSpawnQuatity, Allocator.Temp);
+                    var Array = new NativeArray<Entity>(Mathf.RoundToInt(enemiesSpawner.SlimeBlock_BlueSpawnQuatity + enemiesSpawner.SlimeBlock_BlueSpawnQuatity * (currentLevel-1) * 0.25f), Allocator.Temp);
                     state.EntityManager.Instantiate(enemiesSpawner.SlimeBlock_Blue, Array);
                     foreach (var entity in Array)
                     {
@@ -135,8 +139,8 @@ public partial struct EnemiesSpawnerSystem : ISystem
 
                 if (enemiesSpawner.SlimeBlock_GreenSpawnQuatity > 0)
                 {
-                    var Array = new NativeArray<Entity>(enemiesSpawner.SlimeBlock_GreenSpawnQuatity, Allocator.Temp);
-                    state.EntityManager.Instantiate(enemiesSpawner.SlimeBlock_Blue, Array);
+                    var Array = new NativeArray<Entity>(Mathf.RoundToInt(enemiesSpawner.SlimeBlock_GreenSpawnQuatity + enemiesSpawner.SlimeBlock_GreenSpawnQuatity * (currentLevel-1) * 0.25f), Allocator.Temp);
+                    state.EntityManager.Instantiate(enemiesSpawner.SlimeBlock_Green, Array);
                     foreach (var entity in Array)
                     {
                         var enemy = SystemAPI.GetComponentRW<EnemiesInfo>(entity);
@@ -146,7 +150,7 @@ public partial struct EnemiesSpawnerSystem : ISystem
 
                 if (enemiesSpawner.SlimeBlock_RedSpawnQuatity > 0)
                 {
-                    var Array = new NativeArray<Entity>(enemiesSpawner.SlimeBlock_RedSpawnQuatity, Allocator.Temp);
+                    var Array = new NativeArray<Entity>(Mathf.RoundToInt(enemiesSpawner.SlimeBlock_RedSpawnQuatity + enemiesSpawner.SlimeBlock_RedSpawnQuatity * (currentLevel-1) * 0.25f), Allocator.Temp);
                     state.EntityManager.Instantiate(enemiesSpawner.SlimeBlock_Red, Array);
                     foreach (var entity in Array)
                     {
@@ -157,7 +161,7 @@ public partial struct EnemiesSpawnerSystem : ISystem
 
                 if (enemiesSpawner.SlizzardSpawnQuatity > 0)
                 {
-                    var Array = new NativeArray<Entity>(enemiesSpawner.SlizzardSpawnQuatity, Allocator.Temp);
+                    var Array = new NativeArray<Entity>(Mathf.RoundToInt(enemiesSpawner.SlizzardSpawnQuatity + enemiesSpawner.SlizzardSpawnQuatity * (currentLevel-1) * 0.25f), Allocator.Temp);
                     state.EntityManager.Instantiate(enemiesSpawner.Slizzard, Array);
                     foreach (var entity in Array)
                     {
@@ -165,16 +169,13 @@ public partial struct EnemiesSpawnerSystem : ISystem
                         enemy.ValueRW.random = Random.CreateFromIndex((uint)entity.Index);
                     }
                 }
-
-
-
-
                 var bigFishSpawnJob = new FishSpawnJob
                 {
                     spawnerInfo = enemiesSpawner,
                     spawnPositionList = spawnPositionList,
+                    currentLevel = currentLevel,
                 };
-                bigFishSpawnJob.Schedule();
+                bigFishSpawnJob.ScheduleParallel();
                 state.Dependency.Complete();
             }
         }
@@ -183,15 +184,18 @@ public partial struct EnemiesSpawnerSystem : ISystem
     [BurstCompile]
     public partial struct FishSpawnJob : IJobEntity
     {
+        [ReadOnly] public int currentLevel;
         public SpawnerInfo spawnerInfo;
-        public NativeArray<float2> spawnPositionList;
+        [ReadOnly ]public NativeArray<float2> spawnPositionList;
 
         readonly void Execute(ref LocalTransform transform, ref EnemiesInfo enemy, Entity entity)
         {
             int positionSelection = (enemy.random.NextInt(0, 23));
 
-            transform.Position = new float3(spawnPositionList[positionSelection].x, spawnPositionList[positionSelection].y, 0);
-            transform.Rotation = quaternion.identity;          
+            transform.Position = new float3(spawnPositionList[positionSelection].x, spawnPositionList[positionSelection].y, 0) + enemy.random.NextInt3(new int3(-4,-4, 0), new int3(4,4,0));
+            transform.Rotation = quaternion.identity;
+            enemy.currentHitPoint = Mathf.RoundToInt(enemy.maxHP + enemy.maxHP*(currentLevel-1) * 0.1f);
+            enemy.damage += Mathf.RoundToInt(currentLevel * 0.5f);
         }
     }
 

@@ -8,6 +8,12 @@ using UnityEngine;
 
 public partial struct EnemyAnimationSystem : ISystem
 {
+    public void OnCreate(ref SystemState state)
+    {
+        state.RequireForUpdate<AnimationVisualsPoolList>();
+        
+    }
+
     public void OnUpdate(ref SystemState state)
     {
         if (!SystemAPI.ManagedAPI.TryGetSingleton(out AnimationVisualsPrefabs animationVisualsPrefabs))
@@ -15,11 +21,27 @@ public partial struct EnemyAnimationSystem : ISystem
             return;
         }
 
+        if (!SystemAPI.ManagedAPI.TryGetSingleton(out AnimationVisualsPoolList animationVisualsPoolList))
+        {
+            return;
+        }
+
+
         EntityCommandBuffer ecb = new EntityCommandBuffer(Allocator.Temp);
+        if(animationVisualsPoolList.VisualPools.Count <= 0)
+        {
+            for(int i = 0; i<10;i++)
+            {
+                animationVisualsPoolList.VisualPools.Add(new AnimationVisualsPool
+                {
+                    VisualPrefabPool = new List<GameObject>()
+                });
+            }
+        }
 
         var enemiesQuery = SystemAPI.QueryBuilder().WithAll<EnemiesInfo>().Build();
         if (enemiesQuery.IsEmpty)
-        { 
+        {
 
         }
         else
@@ -28,8 +50,20 @@ public partial struct EnemyAnimationSystem : ISystem
             {
                 if (!state.EntityManager.HasComponent<VisualsReferenceComponent>(entity))
                 {
-
-                    GameObject enemyVisual = Object.Instantiate(animationVisualsPrefabs.VisualPrefab[enemyInfo.ValueRO.enemiesType]);
+                    GameObject enemyVisual;
+                    if (animationVisualsPoolList.VisualPools[enemyInfo.ValueRO.enemiesType - 1].VisualPrefabPool.Count<=0)
+                    {
+                        enemyVisual = Object.Instantiate(animationVisualsPrefabs.VisualPrefab[enemyInfo.ValueRO.enemiesType]);
+                    }
+                    else
+                    {
+                        enemyVisual = animationVisualsPoolList.VisualPools[enemyInfo.ValueRO.enemiesType -1].VisualPrefabPool[animationVisualsPoolList.VisualPools[enemyInfo.ValueRO.enemiesType - 1].VisualPrefabPool.Count - 1].gameObject;
+                        animationVisualsPoolList.VisualPools[enemyInfo.ValueRO.enemiesType - 1].VisualPrefabPool.Remove(enemyVisual);
+                        if(enemyVisual.activeSelf == false)
+                        {
+                            enemyVisual.SetActive(true);
+                        }
+                    }
 
                     ecb.AddComponent(entity, new VisualsReferenceComponent { gameObject = enemyVisual });
                 }
@@ -37,9 +71,8 @@ public partial struct EnemyAnimationSystem : ISystem
                 {
                     VisualsReferenceComponent enemyVisualRef = state.EntityManager.GetComponentData<VisualsReferenceComponent>(entity);
                     enemyVisualRef.gameObject.transform.position = transform.ValueRO.Position + new float3(0, -0.5f, 0);
-                    enemyVisualRef.gameObject.transform.rotation = transform.ValueRO.Rotation;
                     if (state.EntityManager.HasComponent<EnemyMovementInfo>(entity))
-                    {                        
+                    {
                         EnemyMovementInfo enemyMovementInfo = state.EntityManager.GetComponentData<EnemyMovementInfo>(entity);
                         if (enemyMovementInfo.moveDirection.x != 0 || enemyMovementInfo.moveDirection.y != 0)
                         {
@@ -109,7 +142,7 @@ public partial struct EnemyAnimationSystem : ISystem
 
                 }
             }
-        }    
+        }
         ecb.Playback(state.EntityManager);
         ecb.Dispose();
     }

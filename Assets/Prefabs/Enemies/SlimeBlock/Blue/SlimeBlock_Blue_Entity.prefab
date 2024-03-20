@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemiesType: 7
-  moveSpeed: 3
+  moveSpeed: 1.5
   currentHitPoint: 40
   maxHP: 40
   damage: 2

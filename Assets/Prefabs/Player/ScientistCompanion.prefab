@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &5314038789622778752
+--- !u!1 &4730543314200807519
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,22 +8,22 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1496135191042176113}
-  - component: {fileID: 2145977821932402423}
-  m_Layer: 3
-  m_Name: SlimeBlock_Red_Entity
+  - component: {fileID: 5301657961349955929}
+  - component: {fileID: 6996256212006164152}
+  m_Layer: 0
+  m_Name: ScientistCompanion
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &1496135191042176113
+--- !u!4 &5301657961349955929
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5314038789622778752}
+  m_GameObject: {fileID: 4730543314200807519}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -32,20 +32,26 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2145977821932402423
+--- !u!114 &6996256212006164152
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5314038789622778752}
+  m_GameObject: {fileID: 4730543314200807519}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c0d25ba8c75945348807168cb99aa868, type: 3}
+  m_Script: {fileID: 11500000, guid: ffa26c6114b12af41b70162a0a532393, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemiesType: 9
-  moveSpeed: 4
-  currentHitPoint: 40
-  maxHP: 40
-  damage: 10
+  Speed: 3.5
+  maxHitPoint: 30
+  currentHitPoint: 30
+  hitCoolDown: 1
+  deliveryDmg: 50
+  attackICD: 2
+  companionType: 11
+  bulletSize: 2
+  bulletSpeed: 50
+  bulletSpread: 0.01
+  range: 20

@@ -6,9 +6,6 @@ using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.UIElements;
-using static UnityEngine.EventSystems.EventTrigger;
 
 [BurstCompile]
 public partial struct PlayerControlSystem : ISystem
@@ -25,7 +22,7 @@ public partial struct PlayerControlSystem : ISystem
         var horizontalInput = Input.GetAxis("Horizontal");
         var verticalInput = Input.GetAxis("Vertical");
         var mousePosition = Input.mousePosition;
-        var input = new float3(horizontalInput, verticalInput, 0) * SystemAPI.Time.DeltaTime;
+        var input = math.normalizesafe(new float3(horizontalInput, verticalInput, 0)) * SystemAPI.Time.DeltaTime;
 
         
 
@@ -35,8 +32,23 @@ public partial struct PlayerControlSystem : ISystem
         {
 
 
-            float3 newPosition = transform.ValueRW.Position + input * player.ValueRO.Speed;
-            transform.ValueRW.Position = newPosition;
+            float3 movement = input * player.ValueRO.Speed;
+            if (transform.ValueRO.Position.x+movement.x <= -59 || transform.ValueRO.Position.x+movement.x >= 59)
+            {
+                transform.ValueRW.Position += new float3(0, movement.y, 0);
+            }
+            else
+
+                if (transform.ValueRO.Position.y+movement.y <= -32 || transform.ValueRO.Position.y + movement.y >= 32)
+            {
+                transform.ValueRW.Position += new float3(movement.x, 0, 0);
+            }
+            else
+            {
+                transform.ValueRW.Position += movement;
+            }
+
+
 
             Vector3 dir = mousePosition - Camera.main.WorldToScreenPoint(transform.ValueRO.Position);
 

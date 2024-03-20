@@ -13,6 +13,9 @@ public class PlayerAuthoring : MonoBehaviour
     public GameObject buttletPrefab;
     public float weaponShotICD = 0.5f;
 
+    public GameObject theScientist;
+    public GameObject theThief;
+
     // Start is called before the first frame update
     class Baker: Baker<PlayerAuthoring> 
     {
@@ -30,7 +33,12 @@ public class PlayerAuthoring : MonoBehaviour
                 maxHitPoint = authoring.maxHitPoint,
                 currentHitPoint = authoring.maxHitPoint,    
                 hitCoolDown = authoring.hitCoolDown,
-            });            
+            });
+            AddComponent(entity, new PlayerCompanionsInfo
+            {
+                theScientist = GetEntity(authoring.theScientist, TransformUsageFlags.Dynamic),
+                theThief = GetEntity(authoring.theThief, TransformUsageFlags.Dynamic),
+            });
         }
     } 
 }
