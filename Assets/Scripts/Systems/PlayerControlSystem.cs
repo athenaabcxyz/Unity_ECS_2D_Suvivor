@@ -28,11 +28,11 @@ public partial struct PlayerControlSystem : ISystem
 
         EntityCommandBuffer ecb = new EntityCommandBuffer(Allocator.Temp);
 
-        foreach (var (transform, player, entity) in SystemAPI.Query<RefRW<LocalTransform>, RefRW<PlayerInfoComponent>>().WithEntityAccess())
+        foreach (var (transform, player, stat, entity) in SystemAPI.Query<RefRW<LocalTransform>, RefRW<PlayerInfoComponent>, RefRO<StateMultiplierInfo>>().WithEntityAccess())
         {
 
 
-            float3 movement = input * player.ValueRO.Speed;
+            float3 movement = input * player.ValueRO.Speed*stat.ValueRO.speedMultiplier;
             if (transform.ValueRO.Position.x+movement.x <= -59 || transform.ValueRO.Position.x+movement.x >= 59)
             {
                 transform.ValueRW.Position += new float3(0, movement.y, 0);

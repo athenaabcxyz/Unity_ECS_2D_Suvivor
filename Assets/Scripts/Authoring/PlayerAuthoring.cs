@@ -12,7 +12,11 @@ public class PlayerAuthoring : MonoBehaviour
     [SerializeField] float hitCoolDown = 1f;
     public GameObject buttletPrefab;
     public float weaponShotICD = 0.5f;
-
+    public float bulletSize;
+    public float bulletSpeed;
+    public float bulletSpread;
+    public int deliveryDmg;
+    public float range;
     public GameObject theScientist;
     public GameObject theThief;
 
@@ -31,13 +35,29 @@ public class PlayerAuthoring : MonoBehaviour
             {
                 Speed = authoring.speed,
                 maxHitPoint = authoring.maxHitPoint,
-                currentHitPoint = authoring.maxHitPoint,    
+                currentHitPoint = authoring.maxHitPoint,
                 hitCoolDown = authoring.hitCoolDown,
+                bulletSize = authoring.bulletSize,
+                bulletSpeed = authoring.bulletSpeed,
+                bulletSpread = authoring.bulletSpread,
+                range = authoring.range,
+                deliveryDmg = authoring.deliveryDmg,
             });
             AddComponent(entity, new PlayerCompanionsInfo
             {
                 theScientist = GetEntity(authoring.theScientist, TransformUsageFlags.Dynamic),
                 theThief = GetEntity(authoring.theThief, TransformUsageFlags.Dynamic),
+            });
+            AddComponent(entity, new LevelingInfoComponent
+            {
+                currentExp = 0,
+                currentLevel = 1
+            });
+            AddComponent(entity, new StateMultiplierInfo
+            {
+                damageMultiplier = 1,
+                speedMultiplier = 1,
+                healthIncresemet = 0,
             });
         }
     } 

@@ -26,7 +26,7 @@ public partial struct CompanionTargetFindingSystem : ISystem
 
             foreach (var (transformEnemy, enemy, entityEnemy) in SystemAPI.Query<RefRO<LocalTransform>, RefRO<EnemiesInfo>>().WithEntityAccess())
             {
-                if (math.distance(transform.ValueRO.Position, transformEnemy.ValueRO.Position) <= closetDistance)
+                if (math.distance(transform.ValueRO.Position, transformEnemy.ValueRO.Position) < closetDistance)
                 {
                     closetDistance = math.distance(transform.ValueRO.Position, transformEnemy.ValueRO.Position);
                     closetEnemy = entityEnemy;
@@ -36,6 +36,7 @@ public partial struct CompanionTargetFindingSystem : ISystem
             {
                 currentTarget.ValueRW.isAllowedToShoot = true;
                 currentTarget.ValueRW.currentTarget = state.EntityManager.GetComponentData<LocalTransform>(closetEnemy).Position;
+                
             }
             else
             {

@@ -28,7 +28,7 @@ public partial struct BulletMovementSystem : ISystem
         {
             deltaTime = SystemAPI.Time.DeltaTime,
             ecb = ecbParallelWritter,
-        }.ScheduleParallel();
+        }.ScheduleParallel(state.Dependency);
         state.Dependency.Complete();
         ecb.Playback(state.EntityManager);
         ecb.Dispose();
@@ -41,7 +41,7 @@ public partial struct BulletMovementSystem : ISystem
         public float deltaTime;
         readonly void Execute([EntityIndexInQuery] int index, ref LocalTransform transform, ref BulletInfo info, Entity entity, in BulletMovementInfo moveInfo)
         {
-            transform.Position += math.normalize(moveInfo.moveDirection)*info.bulletSpeed*deltaTime;
+            transform.Position = transform.Position + math.normalize(moveInfo.moveDirection)*info.bulletSpeed*deltaTime;
 
             if(transform.Position.x<-60||transform.Position.x>60|| transform.Position.y>35|| transform.Position.y<-35)
             {

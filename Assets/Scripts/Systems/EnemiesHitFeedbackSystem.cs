@@ -17,37 +17,43 @@ public partial struct EnemiesHitFeedbackSystem : ISystem
 
     public void OnUpdate(ref SystemState state)
     {
-        EntityCommandBuffer ecb = new EntityCommandBuffer(Unity.Collections.Allocator.Temp);
-        foreach(var (transform, enemyInfo, damage, entity) in SystemAPI.Query<RefRW<LocalTransform>, RefRW<EnemiesInfo>, RefRW<BulletHitEnemyFlag>>().WithEntityAccess())
+        if(SystemAPI.TryGetSingletonEntity<PlayerInfoComponent>(out Entity player))
         {
-            enemyInfo.ValueRW.currentHitPoint-= damage.ValueRO.damage;
-     
-            if(enemyInfo.ValueRO.currentHitPoint<=0)
+            EntityCommandBuffer ecb = new EntityCommandBuffer(Unity.Collections.Allocator.Temp);
+            foreach (var (transform, enemyInfo, damage, entity) in SystemAPI.Query<RefRW<LocalTransform>, RefRW<EnemiesInfo>, RefRW<BulletHitEnemyFlag>>().WithEntityAccess())
             {
-                var refData = state.EntityManager.GetComponentObject<VisualsReferenceComponent>(entity);
-                SystemAPI.ManagedAPI.TryGetSingleton<AnimationVisualsPoolList>(out AnimationVisualsPoolList poolList);
-                refData.gameObject.SetActive(false);
-                float chance = random.NextFloat(0, 100);
-                if(chance>0 && chance<=3)
+                enemyInfo.ValueRW.currentHitPoint -= damage.ValueRO.damage;
+
+                if (enemyInfo.ValueRO.currentHitPoint <= 0)
                 {
-                    var health = state.EntityManager.Instantiate(damage.ValueRO.healthPrefab);
-                    ecb.SetComponent(health, new LocalTransform
+                    var levelInfo = state.EntityManager.GetComponentData<LevelingInfoComponent>(player);
+                    var refData = state.EntityManager.GetComponentObject<VisualsReferenceComponent>(entity);
+                    SystemAPI.ManagedAPI.TryGetSingleton<AnimationVisualsPoolList>(out AnimationVisualsPoolList poolList);
+                    refData.gameObject.SetActive(false);
+                    float chance = random.NextFloat(0, 100);
+                    if (chance > 0 && chance <= 3)
                     {
-                        Position = transform.ValueRO.Position,
-                        Rotation = quaternion.identity,
-                        Scale = 1
-                    });
-                }             
-                poolList.VisualPools[enemyInfo.ValueRO.enemiesType-1].VisualPrefabPool.Add(refData.gameObject);  
-                ecb.DestroyEntity(entity);
+                        var health = state.EntityManager.Instantiate(damage.ValueRO.healthPrefab);
+                        ecb.SetComponent(health, new LocalTransform
+                        {
+                            Position = transform.ValueRO.Position,
+                            Rotation = quaternion.identity,
+                            Scale = 1
+                        });
+                    }
+                    levelInfo.currentExp += levelInfo.currentLevel;
+                    poolList.VisualPools[enemyInfo.ValueRO.enemiesType - 1].VisualPrefabPool.Add(refData.gameObject);
+                    ecb.DestroyEntity(entity);
+                }
+                else
+                {
+                    ecb.RemoveComponent<BulletHitEnemyFlag>(entity);
+                }
+
             }
-            else
-            {
-                ecb.RemoveComponent<BulletHitEnemyFlag>(entity);
-            }
-            
+            ecb.Playback(state.EntityManager);
+            ecb.Dispose();
         }
-        ecb.Playback(state.EntityManager);
-        ecb.Dispose();
+       
     }
 }

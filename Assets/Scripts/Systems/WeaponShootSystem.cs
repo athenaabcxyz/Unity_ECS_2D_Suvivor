@@ -6,6 +6,7 @@ using Random = Unity.Mathematics.Random;
 using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
+using System;
 
 [BurstCompile]
 public partial struct WeaponShootSystem : ISystem
@@ -27,7 +28,9 @@ public partial struct WeaponShootSystem : ISystem
         if(SystemAPI.TryGetSingletonEntity<PlayerInfoComponent>(out Entity entity))
         {
             var weaponInfo = state.EntityManager.GetComponentData<WeaponInfo>(entity);
+            var playerInfo = state.EntityManager.GetComponentData<PlayerInfoComponent>(entity);
             var currentWeaponInfo = state.EntityManager.GetComponentData<CurrentWeaponInfo>(entity);
+            var statMulti = state.EntityManager.GetComponentData<StateMultiplierInfo>(entity);
 
             if (Input.GetKey(KeyCode.Mouse0))
             {
@@ -37,12 +40,18 @@ public partial struct WeaponShootSystem : ISystem
                     state.EntityManager.SetComponentData(bullet, new LocalTransform
                     {
                         Position = currentWeaponInfo.weaponShootPosition,
-                        Scale = 1.5f,
+                        Scale = playerInfo.bulletSize,
                         Rotation = Quaternion.identity,
+                    });
+                    state.EntityManager.SetComponentData(bullet, new BulletInfo
+                    {
+                        bulletSpeed = playerInfo.bulletSpeed,
+                        deliveryDamage = Mathf.RoundToInt(playerInfo.deliveryDmg * statMulti.damageMultiplier),
                     });
                     state.EntityManager.SetComponentData(bullet, new BulletMovementInfo
                     {
-                        moveDirection = math.normalize(currentWeaponInfo.weaponShootDirection)+random.NextFloat3(new float3(-0.05f, -0.05f,0), new float3(0.05f, 0.05f, 0)),
+                        
+                        moveDirection = math.normalize(currentWeaponInfo.weaponShootDirection)+random.NextFloat3(new float3(-playerInfo.bulletSpread, -playerInfo.bulletSpread, 0), new float3(playerInfo.bulletSpread, playerInfo.bulletSpread, 0)),
                     });
                     nextShootICD = (float)SystemAPI.Time.ElapsedTime + weaponInfo.weaponShootICD;
                 }

@@ -5,7 +5,6 @@ using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
-using static UnityEngine.EventSystems.EventTrigger;
 
 [BurstCompile]
 public partial struct CompanionAttackSystem : ISystem
@@ -38,7 +37,6 @@ public partial struct CompanionAttackSystem : ISystem
         public float deltaTime;
         public double elaspedTime;
         public EntityCommandBuffer.ParallelWriter ecb;
-        [BurstCompile]
         public void Execute([EntityIndexInQuery] int index, ref RandomSeedComponent random, ref LocalTransform transform, ref CurrentTarget target, ref CompanionInfo companion, ref CompanionMovementInfo movementInfo, Entity entity, ref WeaponInfo weapon, ref CurrentWeaponInfo currentWeapon)
         {
             if (target.isAllowedToShoot == true)
