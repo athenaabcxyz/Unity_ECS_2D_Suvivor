@@ -266,9 +266,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ade0abda2927f14f9e56516990e7697, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Grimonk_BrownSpawnQuatity: 2
+  Grimonk_BrownSpawnQuatity: 1
   Grimonk_Brown: {fileID: 5314038789622778752, guid: 9eed8b1d63df5a243aaa8aad43ebd87f, type: 3}
-  Hedusa_BlueSpawnQuatity: 2
+  Hedusa_BlueSpawnQuatity: 1
   Hedusa_Blue: {fileID: 5314038789622778752, guid: 0d9c4991c17b9b241a3318c94420d949, type: 3}
   Hedusa_GreenSpawnQuatity: 2
   Hedusa_Green: {fileID: 5314038789622778752, guid: e69677e84910ea645b9bb5089a60f613, type: 3}

@@ -8,8 +8,11 @@ public class BulletAuthoring : MonoBehaviour
     public int BulletDamage;
     public float BulletSpeed;
     public GameObject healthPrefab;
+
+    
     public class Baker : Baker<BulletAuthoring>
     {
+       
         public override void Bake(BulletAuthoring authoring)
         {
             var Entity = GetEntity(TransformUsageFlags.Dynamic);

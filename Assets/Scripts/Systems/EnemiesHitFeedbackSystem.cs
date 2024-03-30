@@ -42,6 +42,7 @@ public partial struct EnemiesHitFeedbackSystem : ISystem
                         });
                     }
                     levelInfo.currentExp += levelInfo.currentLevel;
+                    ecb.SetComponent(player, levelInfo);
                     poolList.VisualPools[enemyInfo.ValueRO.enemiesType - 1].VisualPrefabPool.Add(refData.gameObject);
                     ecb.DestroyEntity(entity);
                 }
