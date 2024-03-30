@@ -48,4 +48,4 @@ MonoBehaviour:
   moveSpeed: 2
   currentHitPoint: 30
   maxHP: 30
-  damage: 2
+  damage: 10

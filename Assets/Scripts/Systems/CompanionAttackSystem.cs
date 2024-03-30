@@ -24,7 +24,7 @@ public partial struct CompanionAttackSystem : ISystem
             elaspedTime = SystemAPI.Time.ElapsedTime,
             deltaTime = SystemAPI.Time.DeltaTime,
             ecb = ecb.AsParallelWriter()
-        }.ScheduleParallel(state.Dependency);
+        }.ScheduleParallel(new Unity.Jobs.JobHandle());
         handler.Complete();
         ecb.Playback(state.EntityManager);
         ecb.Dispose();

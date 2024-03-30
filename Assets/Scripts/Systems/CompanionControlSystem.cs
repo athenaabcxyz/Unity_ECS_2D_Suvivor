@@ -37,7 +37,7 @@ public partial struct CompanionControlSystem : ISystem
                 playerPosition = playerPosition,
                 deltaTime = SystemAPI.Time.DeltaTime,
                 ecb = ecb.AsParallelWriter()
-            }.ScheduleParallel(state.Dependency);
+            }.ScheduleParallel(new Unity.Jobs.JobHandle());
             handler.Complete();
             companionPosition.Dispose();
             nativePosition.Dispose();

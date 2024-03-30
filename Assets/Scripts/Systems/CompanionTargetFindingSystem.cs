@@ -18,7 +18,7 @@ public partial struct CompanionTargetFindingSystem : ISystem
     [BurstCompile]
     public void OnUpdate(ref SystemState state)
     {
-
+        
         foreach (var (transform, currentTarget, companion) in SystemAPI.Query<RefRW<LocalTransform>, RefRW<CurrentTarget>, RefRO<CompanionInfo>>())
         {
             float closetDistance = companion.ValueRO.range;

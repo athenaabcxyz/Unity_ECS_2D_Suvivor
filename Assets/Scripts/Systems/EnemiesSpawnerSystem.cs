@@ -169,14 +169,14 @@ public partial struct EnemiesSpawnerSystem : ISystem
                         enemy.ValueRW.random = Random.CreateFromIndex((uint)entity.Index);
                     }
                 }
+
                 var bigFishSpawnJob = new FishSpawnJob
                 {
                     spawnerInfo = enemiesSpawner,
                     spawnPositionList = spawnPositionList,
                     currentLevel = currentLevel,
-                };
-                bigFishSpawnJob.ScheduleParallel();
-                state.Dependency.Complete();
+                }.ScheduleParallel(new Unity.Jobs.JobHandle());
+                bigFishSpawnJob.Complete();
             }
         }
     }

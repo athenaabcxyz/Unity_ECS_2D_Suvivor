@@ -34,7 +34,7 @@ public partial struct EnemiesHitFeedbackSystem : ISystem
                     if (chance > 0 && chance <= 3)
                     {
                         var health = state.EntityManager.Instantiate(damage.ValueRO.healthPrefab);
-                        ecb.SetComponent(health, new LocalTransform
+                        state.EntityManager.SetComponentData(health, new LocalTransform
                         {
                             Position = transform.ValueRO.Position,
                             Rotation = quaternion.identity,

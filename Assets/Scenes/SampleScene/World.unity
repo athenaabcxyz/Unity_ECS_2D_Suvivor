@@ -171,11 +171,11 @@ MonoBehaviour:
   maxHitPoint: 100
   hitCoolDown: 1
   buttletPrefab: {fileID: 1501612262009173722, guid: eec791af477965c4ba26e1a0267f246d, type: 3}
-  weaponShotICD: 0.05
+  weaponShotICD: 0.5
   bulletSize: 1.5
   bulletSpeed: 20
   bulletSpread: 0.05
-  deliveryDmg: 1
+  deliveryDmg: 10
   range: 0
   theScientist: {fileID: 4730543314200807519, guid: 7ae035902a118f34fbba5656399e9f87, type: 3}
   theThief: {fileID: 4730543314200807519, guid: 958b1a3243a704143b187fba7c636c00, type: 3}

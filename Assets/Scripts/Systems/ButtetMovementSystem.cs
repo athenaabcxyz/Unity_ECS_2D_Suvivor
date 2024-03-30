@@ -21,15 +21,15 @@ public partial struct BulletMovementSystem : ISystem
     [BurstCompile]
     public void OnUpdate(ref SystemState state)
     {
-       
+
         var ecb = new EntityCommandBuffer(Allocator.TempJob);
         var ecbParallelWritter = ecb.AsParallelWriter();
-        new BulletMovementJob
+        var handler = new BulletMovementJob
         {
             deltaTime = SystemAPI.Time.DeltaTime,
             ecb = ecbParallelWritter,
-        }.ScheduleParallel(state.Dependency);
-        state.Dependency.Complete();
+        }.ScheduleParallel(new Unity.Jobs.JobHandle());
+        handler.Complete();
         ecb.Playback(state.EntityManager);
         ecb.Dispose();
     }

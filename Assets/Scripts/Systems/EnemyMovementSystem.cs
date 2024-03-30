@@ -34,15 +34,14 @@ public partial struct EnemyMovementSystem : ISystem
         ecbMain.Playback(state.EntityManager);
         ecbMain.Dispose();
         var ecbParalell = ecb.AsParallelWriter();
-        var enemyMovementJob = new EnemyChasePlayerJob
+        var enemyMovementJobHandler = new EnemyChasePlayerJob
         {
             currentPlayerPosition = state.EntityManager.GetComponentData<LocalTransform>(playerEntity).Position,
             deltaTime = SystemAPI.Time.DeltaTime,
             ecb = ecbParalell,
             enemiesPositionList = nativePosition,
-        };
-        enemyMovementJob.ScheduleParallel();
-        state.Dependency.Complete();
+        }.ScheduleParallel(new Unity.Jobs.JobHandle());
+        enemyMovementJobHandler.Complete();
         nativePosition.Dispose();
         ecb.Playback(state.EntityManager);
         ecb.Dispose();
