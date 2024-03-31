@@ -1,18 +1,31 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Collections;
+using Unity.Entities;
 using UnityEngine;
 
-public class PlayerLevelUpSystem : MonoBehaviour
+public partial struct PlayerLevelUpSystem : ISystem
 {
-    // Start is called before the first frame update
-    void Start()
+    public void OnCreate(ref SystemState state)
     {
-        
+        state.RequireForUpdate<LevelingInfoComponent>();
     }
 
-    // Update is called once per frame
-    void Update()
+    public void OnUpdate(ref SystemState state)
     {
-        
+        if(SystemAPI.TryGetSingletonEntity<PlayerInfoComponent>(out Entity player))
+        {          
+            var levelingInfo = state.EntityManager.GetComponentData<LevelingInfoComponent>(player);
+            var playerInfo = state.EntityManager.GetComponentData<PlayerInfoComponent>(player);
+            var stat = state.EntityManager.GetComponentData<StateMultiplierInfo>(player);
+            if (levelingInfo.currentExp>= levelingInfo.currentLevel*10)
+            {
+                levelingInfo.currentExp -= levelingInfo.currentLevel * 10;
+                levelingInfo.currentLevel++;                     
+                playerInfo.currentHitPoint = playerInfo.maxHitPoint + stat.healthIncresemet;
+                state.EntityManager.SetComponentData(player, levelingInfo);
+                state.EntityManager.SetComponentData(player, playerInfo);
+            }
+        }
     }
 }
