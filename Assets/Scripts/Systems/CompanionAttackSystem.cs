@@ -54,7 +54,8 @@ public partial struct CompanionAttackSystem : ISystem
                     {
                         bulletSpeed = companion.bulletSpeed,
                         deliveryDamage = companion.deliveryDmg,
-                    });
+                        isEnemyBullet = false
+                    }) ;
                     ecb.SetComponent(index, bullet, new BulletMovementInfo
                     {
                         moveDirection = math.normalize(currentWeapon.weaponShootDirection)+random.random.NextFloat3(new float3(-companion.bulletSpread, -companion.bulletSpread, 0), new float3(companion.bulletSpread, companion.bulletSpread, 0)),

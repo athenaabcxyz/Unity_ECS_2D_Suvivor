@@ -5,6 +5,7 @@ using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public partial struct EnemyAnimationSystem : ISystem
 {
@@ -42,7 +43,7 @@ public partial struct EnemyAnimationSystem : ISystem
         var enemiesQuery = SystemAPI.QueryBuilder().WithAll<EnemiesInfo>().Build();
         if (enemiesQuery.IsEmpty)
         {
-
+            return;
         }
         else
         {
@@ -85,7 +86,32 @@ public partial struct EnemyAnimationSystem : ISystem
                             enemyVisualRef.gameObject.GetComponent<Animator>().SetBool("isMoving", false);
                             enemyVisualRef.gameObject.GetComponent<Animator>().SetBool("isIdle", true);
                         }
-
+                        if(state.EntityManager.HasComponent<EnemiesShootInfo>(entity))
+                        {
+                            SystemAPI.TryGetSingletonEntity<PlayerInfoComponent>(out Entity player);
+                            var playerWeaponBehaviorComponent = enemyVisualRef.gameObject.GetComponent<PlayerWeaponBehavior>();
+                            var weaponShootPosition = (float3)playerWeaponBehaviorComponent.GetShootPosition();
+                            var weaponPosition = (float3)playerWeaponBehaviorComponent.GetWeaponPosition();
+                            var weaponDirection = state.EntityManager.GetComponentData<LocalTransform>(player).Position - (float3)weaponPosition;
+                            if (!state.EntityManager.HasComponent<CurrentWeaponInfo>(entity))
+                            {
+                                ecb.AddComponent(entity, new CurrentWeaponInfo
+                                {
+                                    weaponShootPosition = weaponShootPosition,
+                                    weaponShootDirection = weaponDirection,
+                                });
+                            }
+                            else
+                            {
+                                ecb.SetComponent(entity, new CurrentWeaponInfo
+                                {
+                                    weaponShootPosition = weaponShootPosition,
+                                    weaponShootDirection = weaponDirection,
+                                });
+                            }
+                            playerWeaponBehaviorComponent.Aim(enemyMovementInfo.mouseAngle, GetAngleFromVector(weaponDirection));
+                        }
+                       
                         switch (enemyMovementInfo.mouseAngle)
                         {
                             case RotationEnum.aimUp:
@@ -95,6 +121,7 @@ public partial struct EnemyAnimationSystem : ISystem
                                 enemyVisualRef.gameObject.GetComponent<Animator>().SetBool("aimLeft", false);
                                 enemyVisualRef.gameObject.GetComponent<Animator>().SetBool("aimUpLeft", false);
                                 enemyVisualRef.gameObject.GetComponent<Animator>().SetBool("aimUpRight", false);
+                               
                                 break;
                             case RotationEnum.aimDown:
                                 enemyVisualRef.gameObject.GetComponent<Animator>().SetBool("aimUp", false);
@@ -145,5 +172,58 @@ public partial struct EnemyAnimationSystem : ISystem
         }
         ecb.Playback(state.EntityManager);
         ecb.Dispose();
+    }
+    public RotationEnum GetAimDirection(float angleDegrees)
+    {
+        RotationEnum aimDirection;
+
+        // Set player direction
+        //Up Right
+        if (angleDegrees >= 22f && angleDegrees <= 67f)
+        {
+            aimDirection = RotationEnum.aimUpRight;
+        }
+        // Up
+        else if (angleDegrees > 67f && angleDegrees <= 112f)
+        {
+            aimDirection = RotationEnum.aimUp;
+        }
+        // Up Left
+        else if (angleDegrees > 112f && angleDegrees <= 158f)
+        {
+            aimDirection = RotationEnum.aimUpLeft;
+        }
+        // Left
+        else if ((angleDegrees <= 180f && angleDegrees > 158f) || (angleDegrees > -180 && angleDegrees <= -135f))
+        {
+            aimDirection = RotationEnum.aimLeft;
+        }
+        // Down
+        else if ((angleDegrees > -135f && angleDegrees <= -45f))
+        {
+            aimDirection = RotationEnum.aimDown;
+        }
+        // Right
+        else if ((angleDegrees > -45f && angleDegrees <= 0f) || (angleDegrees > 0 && angleDegrees < 22f))
+        {
+            aimDirection = RotationEnum.aimRight;
+        }
+        else
+        {
+            aimDirection = RotationEnum.aimRight;
+        }
+
+        return aimDirection;
+
+    }
+    public float GetAngleFromVector(float3 vector)
+    {
+
+        float radians = Mathf.Atan2(vector.y, vector.x);
+
+        float degrees = radians * Mathf.Rad2Deg;
+
+        return degrees;
+
     }
 }

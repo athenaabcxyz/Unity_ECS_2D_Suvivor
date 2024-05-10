@@ -14,3 +14,12 @@ public struct EnemiesInfo: IComponentData
     public int damage;
     public Random random;
 }
+
+public struct EnemiesShootInfo: IComponentData
+{
+    public Entity bulletPrefab;
+    public float weaponShootICD;
+    public int damage;
+    public float bulletSpeed;
+    public double shootCounter;
+}

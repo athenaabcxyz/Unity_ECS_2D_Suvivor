@@ -47,7 +47,8 @@ public partial struct WeaponShootSystem : ISystem
                     {
                         bulletSpeed = playerInfo.bulletSpeed,
                         deliveryDamage = Mathf.RoundToInt(playerInfo.deliveryDmg * statMulti.damageMultiplier),
-                    });
+                        isEnemyBullet = false
+                    }) ;
                     state.EntityManager.SetComponentData(bullet, new BulletMovementInfo
                     {
                         

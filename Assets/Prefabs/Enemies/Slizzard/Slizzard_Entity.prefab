@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1496135191042176113}
-  - component: {fileID: 2145977821932402423}
+  - component: {fileID: 2714476521236652052}
   m_Layer: 3
   m_Name: Slizzard_Entity
   m_TagString: Untagged
@@ -32,7 +32,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2145977821932402423
+--- !u!114 &2714476521236652052
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -41,11 +41,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 5314038789622778752}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c0d25ba8c75945348807168cb99aa868, type: 3}
+  m_Script: {fileID: 11500000, guid: 3b988431932bcb94399cf357086dbe90, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   enemiesType: 10
-  moveSpeed: 4
-  currentHitPoint: 20
-  maxHP: 20
+  moveSpeed: 1.5
+  currentHitPoint: 40
+  maxHP: 40
   damage: 10
+  ICD: 1
+  bulletSpeed: 10
+  bulletPrefab: {fileID: 1501612262009173722, guid: 24986fe436dcc8d4f8501d01ff03d341, type: 3}

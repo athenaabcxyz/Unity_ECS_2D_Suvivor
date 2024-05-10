@@ -21,31 +21,58 @@ public partial struct BulletDamageSystem : ISystem
     {
 
         EntityCommandBuffer ecb = new EntityCommandBuffer(Allocator.Temp);
-        foreach (var (transform, info, health,  bullet ) in SystemAPI.Query<RefRW<LocalTransform>, RefRW<BulletInfo>, RefRO<HealthOnBulletInfo>>().WithEntityAccess())
+        foreach (var (transform, info, health, bullet) in SystemAPI.Query<RefRW<LocalTransform>, RefRW<BulletInfo>, RefRO<HealthOnBulletInfo>>().WithEntityAccess())
         {
             Entity closetEnemy = Entity.Null;
             float smalestDistance = 0.8f;
             bool isCollided = false;
-
-            foreach (var (transformEnemy, enemyInfo, enemy) in SystemAPI.Query<RefRO<LocalTransform>, RefRO<EnemiesInfo>>().WithEntityAccess())
+            if (!info.ValueRO.isEnemyBullet)
             {
-                if (math.distance(transform.ValueRO.Position, transformEnemy.ValueRO.Position) <= smalestDistance)
+                foreach (var (transformEnemy, enemyInfo, enemy) in SystemAPI.Query<RefRO<LocalTransform>, RefRO<EnemiesInfo>>().WithEntityAccess())
                 {
-                    closetEnemy = enemy;
-                    isCollided = true;
-                    smalestDistance = math.distance(transform.ValueRO.Position, transformEnemy.ValueRO.Position);
+                    if (math.distance(transform.ValueRO.Position, transformEnemy.ValueRO.Position) <= smalestDistance)
+                    {
+                        closetEnemy = enemy;
+                        isCollided = true;
+                        smalestDistance = math.distance(transform.ValueRO.Position, transformEnemy.ValueRO.Position);
+                    }
+                }
+
+                if (isCollided && closetEnemy != Entity.Null)
+                {
+                    ecb.DestroyEntity(bullet);
+                    ecb.AddComponent(closetEnemy, new BulletHitFlag
+                    {
+                        damage = info.ValueRO.deliveryDamage,
+                        healthPrefab = health.ValueRO.healthPrefab,
+                    });
+                }
+            }
+            else
+            {
+                if (SystemAPI.TryGetSingletonEntity<PlayerInfoComponent>(out var player))
+                {
+                    var transformPlayer = state.EntityManager.GetComponentData<LocalTransform>(player);
+                    if (math.distance(transform.ValueRO.Position, transformPlayer.Position) <= smalestDistance)
+                    {
+                        closetEnemy = player;
+                        isCollided = true;
+                        smalestDistance = math.distance(transform.ValueRO.Position, transformPlayer.Position);
+                    }
+                }
+
+
+                if (isCollided && closetEnemy != Entity.Null)
+                {
+                    ecb.DestroyEntity(bullet);
+                    ecb.AddComponent(closetEnemy, new BulletHitFlag
+                    {
+                        damage = info.ValueRO.deliveryDamage,
+                        healthPrefab = health.ValueRO.healthPrefab,
+                    });
                 }
             }
 
-            if (isCollided && closetEnemy!=Entity.Null)
-            {
-                ecb.DestroyEntity(bullet);
-                ecb.AddComponent(closetEnemy, new BulletHitEnemyFlag
-                {
-                    damage = info.ValueRO.deliveryDamage,
-                    healthPrefab = health.ValueRO.healthPrefab,
-                });
-            }
         }
         ecb.Playback(state.EntityManager);
         ecb.Dispose();

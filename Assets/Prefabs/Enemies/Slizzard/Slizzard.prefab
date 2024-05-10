@@ -76,6 +76,22 @@ PrefabInstance:
       propertyPath: m_WasSpriteAssigned
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3477479895329132997, guid: 7d9bf5c8e5746c642a787fa527ac3292, type: 3}
+      propertyPath: m_Size.x
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3477479895329132997, guid: 7d9bf5c8e5746c642a787fa527ac3292, type: 3}
+      propertyPath: m_Size.y
+      value: 0.8125
+      objectReference: {fileID: 0}
+    - target: {fileID: 3477479895329132997, guid: 7d9bf5c8e5746c642a787fa527ac3292, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: dff74299f2cf7674eb05930ed6b07f8e, type: 3}
+    - target: {fileID: 3477479895329132997, guid: 7d9bf5c8e5746c642a787fa527ac3292, type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3831850045818764226, guid: 7d9bf5c8e5746c642a787fa527ac3292, type: 3}
       propertyPath: m_Size.x
       value: 0.25
@@ -156,6 +172,34 @@ PrefabInstance:
       propertyPath: m_Points.m_Paths.Array.data[0].Array.data[4].y
       value: 1.1641742
       objectReference: {fileID: 0}
+    - target: {fileID: 8478364313358663535, guid: 7d9bf5c8e5746c642a787fa527ac3292, type: 3}
+      propertyPath: m_SpriteTilingProperty.pivot.x
+      value: 0.2916667
+      objectReference: {fileID: 0}
+    - target: {fileID: 8478364313358663535, guid: 7d9bf5c8e5746c642a787fa527ac3292, type: 3}
+      propertyPath: m_SpriteTilingProperty.pivot.y
+      value: 0.23076925
+      objectReference: {fileID: 0}
+    - target: {fileID: 8478364313358663535, guid: 7d9bf5c8e5746c642a787fa527ac3292, type: 3}
+      propertyPath: m_SpriteTilingProperty.newSize.x
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8478364313358663535, guid: 7d9bf5c8e5746c642a787fa527ac3292, type: 3}
+      propertyPath: m_SpriteTilingProperty.newSize.y
+      value: 0.8125
+      objectReference: {fileID: 0}
+    - target: {fileID: 8478364313358663535, guid: 7d9bf5c8e5746c642a787fa527ac3292, type: 3}
+      propertyPath: m_SpriteTilingProperty.oldSize.x
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8478364313358663535, guid: 7d9bf5c8e5746c642a787fa527ac3292, type: 3}
+      propertyPath: m_SpriteTilingProperty.oldSize.y
+      value: 0.8125
+      objectReference: {fileID: 0}
+    - target: {fileID: 8478364313358663535, guid: 7d9bf5c8e5746c642a787fa527ac3292, type: 3}
+      propertyPath: m_SpriteTilingProperty.adaptiveTilingThreshold
+      value: 0.5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -163,6 +207,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 5045320335855835643, guid: 7d9bf5c8e5746c642a787fa527ac3292, type: 3}
       insertIndex: -1
       addedObject: {fileID: -5923891759577379719}
+    - targetCorrespondingSourceObject: {fileID: 5045320335855835643, guid: 7d9bf5c8e5746c642a787fa527ac3292, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5378142077099476148}
   m_SourcePrefab: {fileID: 100100000, guid: 7d9bf5c8e5746c642a787fa527ac3292, type: 3}
 --- !u!1 &3612535418984673539 stripped
 GameObject:
@@ -181,3 +228,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b93dc5f4ec86cab468b103748889d358, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &5378142077099476148
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3612535418984673539}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 389c14a045dbcc248925e53e817638ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weaponRotationPointTransform: {fileID: 6676083356546347831}
+  ShootPosition: {fileID: 6027536015357784340}
+--- !u!4 &6027536015357784340 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2846492521601882604, guid: 7d9bf5c8e5746c642a787fa527ac3292, type: 3}
+  m_PrefabInstance: {fileID: 8369616444616665336}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &6676083356546347831 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2918596162463423439, guid: 7d9bf5c8e5746c642a787fa527ac3292, type: 3}
+  m_PrefabInstance: {fileID: 8369616444616665336}
+  m_PrefabAsset: {fileID: 0}

@@ -87,7 +87,7 @@ public partial struct CompanionAnimationSystem : ISystem
                             playerVisualRef.gameObject.GetComponent<Animator>().SetBool("aimLeft", false);
                             playerVisualRef.gameObject.GetComponent<Animator>().SetBool("aimUpLeft", false);
                             playerVisualRef.gameObject.GetComponent<Animator>().SetBool("aimUpRight", false);
-                            playerWeaponBehaviorComponent.Aim(RotationEnum.aimUp, GetAngleFromVector(weaponDirection));
+                            playerWeaponBehaviorComponent.Aim(RotationEnum.aimDown, GetAngleFromVector(weaponDirection));
                             break;
                         case RotationEnum.aimRight:
                             playerVisualRef.gameObject.GetComponent<Animator>().SetBool("aimUp", false);
@@ -96,7 +96,7 @@ public partial struct CompanionAnimationSystem : ISystem
                             playerVisualRef.gameObject.GetComponent<Animator>().SetBool("aimLeft", false);
                             playerVisualRef.gameObject.GetComponent<Animator>().SetBool("aimUpLeft", false);
                             playerVisualRef.gameObject.GetComponent<Animator>().SetBool("aimUpRight", false);
-                            playerWeaponBehaviorComponent.Aim(RotationEnum.aimUp, GetAngleFromVector(weaponDirection));
+                            playerWeaponBehaviorComponent.Aim(RotationEnum.aimRight, GetAngleFromVector(weaponDirection));
                             break;
                         case RotationEnum.aimLeft:
                             playerVisualRef.gameObject.GetComponent<Animator>().SetBool("aimUp", false);
@@ -105,7 +105,7 @@ public partial struct CompanionAnimationSystem : ISystem
                             playerVisualRef.gameObject.GetComponent<Animator>().SetBool("aimLeft", true);
                             playerVisualRef.gameObject.GetComponent<Animator>().SetBool("aimUpLeft", false);
                             playerVisualRef.gameObject.GetComponent<Animator>().SetBool("aimUpRight", false);
-                            playerWeaponBehaviorComponent.Aim(RotationEnum.aimUp, GetAngleFromVector(weaponDirection));
+                            playerWeaponBehaviorComponent.Aim(RotationEnum.aimLeft, GetAngleFromVector(weaponDirection));
                             break;
                         case RotationEnum.aimUpLeft:
                             playerVisualRef.gameObject.GetComponent<Animator>().SetBool("aimUp", false);
@@ -114,7 +114,7 @@ public partial struct CompanionAnimationSystem : ISystem
                             playerVisualRef.gameObject.GetComponent<Animator>().SetBool("aimLeft", false);
                             playerVisualRef.gameObject.GetComponent<Animator>().SetBool("aimUpLeft", true);
                             playerVisualRef.gameObject.GetComponent<Animator>().SetBool("aimUpRight", false);
-                            playerWeaponBehaviorComponent.Aim(RotationEnum.aimUp, GetAngleFromVector(weaponDirection));
+                            playerWeaponBehaviorComponent.Aim(RotationEnum.aimUpLeft, GetAngleFromVector(weaponDirection));
                             break;
                         case RotationEnum.aimUpRight:
                             playerVisualRef.gameObject.GetComponent<Animator>().SetBool("aimUp", false);
@@ -123,7 +123,7 @@ public partial struct CompanionAnimationSystem : ISystem
                             playerVisualRef.gameObject.GetComponent<Animator>().SetBool("aimLeft", false);
                             playerVisualRef.gameObject.GetComponent<Animator>().SetBool("aimUpLeft", false);
                             playerVisualRef.gameObject.GetComponent<Animator>().SetBool("aimUpRight", true);
-                            playerWeaponBehaviorComponent.Aim(RotationEnum.aimUp, GetAngleFromVector(weaponDirection));
+                            playerWeaponBehaviorComponent.Aim(RotationEnum.aimUpRight, GetAngleFromVector(weaponDirection));
                             break;
 
                     }

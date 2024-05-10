@@ -12,7 +12,7 @@ public partial struct EnemiesHitFeedbackSystem : ISystem
     public void OnCreate(ref SystemState state)
     {
         random = Random.CreateFromIndex(0);
-        state.RequireForUpdate<BulletHitEnemyFlag>();
+        state.RequireForUpdate<BulletHitFlag>();
     }
 
     public void OnUpdate(ref SystemState state)
@@ -20,7 +20,7 @@ public partial struct EnemiesHitFeedbackSystem : ISystem
         if(SystemAPI.TryGetSingletonEntity<PlayerInfoComponent>(out Entity player))
         {
             EntityCommandBuffer ecb = new EntityCommandBuffer(Unity.Collections.Allocator.Temp);
-            foreach (var (transform, enemyInfo, damage, entity) in SystemAPI.Query<RefRW<LocalTransform>, RefRW<EnemiesInfo>, RefRW<BulletHitEnemyFlag>>().WithEntityAccess())
+            foreach (var (transform, enemyInfo, damage, entity) in SystemAPI.Query<RefRW<LocalTransform>, RefRW<EnemiesInfo>, RefRW<BulletHitFlag>>().WithEntityAccess())
             {
                 enemyInfo.ValueRW.currentHitPoint -= damage.ValueRO.damage;
 
@@ -48,7 +48,7 @@ public partial struct EnemiesHitFeedbackSystem : ISystem
                 }
                 else
                 {
-                    ecb.RemoveComponent<BulletHitEnemyFlag>(entity);
+                    ecb.RemoveComponent<BulletHitFlag>(entity);
                 }
 
             }
