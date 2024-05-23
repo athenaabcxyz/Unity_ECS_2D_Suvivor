@@ -179,6 +179,8 @@ MonoBehaviour:
   range: 0
   theScientist: {fileID: 4730543314200807519, guid: 7ae035902a118f34fbba5656399e9f87, type: 3}
   theThief: {fileID: 4730543314200807519, guid: 958b1a3243a704143b187fba7c636c00, type: 3}
+  rocketPrefab: {fileID: 3704831762367981905, guid: 8fd920e3c97f878439a9451ef22cf6a7, type: 3}
+  shootICD: 5
 --- !u!1 &186080684
 GameObject:
   m_ObjectHideFlags: 0
@@ -266,21 +268,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ade0abda2927f14f9e56516990e7697, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Grimonk_BrownSpawnQuatity: 0
+  Grimonk_BrownSpawnQuatity: 10
   Grimonk_Brown: {fileID: 5314038789622778752, guid: 9eed8b1d63df5a243aaa8aad43ebd87f, type: 3}
-  Hedusa_BlueSpawnQuatity: 0
+  Hedusa_BlueSpawnQuatity: 10
   Hedusa_Blue: {fileID: 5314038789622778752, guid: 0d9c4991c17b9b241a3318c94420d949, type: 3}
-  Hedusa_GreenSpawnQuatity: 0
+  Hedusa_GreenSpawnQuatity: 10
   Hedusa_Green: {fileID: 5314038789622778752, guid: e69677e84910ea645b9bb5089a60f613, type: 3}
-  Hedusa_RedSpawnQuatity: 0
+  Hedusa_RedSpawnQuatity: 10
   Hedusa_Red: {fileID: 5314038789622778752, guid: 99da0fc71b5e89e4da08d1dacbdd81af, type: 3}
-  MudRock_BrownSpawnQuatity: 0
+  MudRock_BrownSpawnQuatity: 10
   MudRock_Brown: {fileID: 5314038789622778752, guid: 3cf6d8dcb66e3b9469407b353470c544, type: 3}
-  Orc_FleshSpawnQuatity: 0
+  Orc_FleshSpawnQuatity: 10
   Orc_Flesh: {fileID: 5314038789622778752, guid: c927742eafafbd643ac32183a22146f8, type: 3}
-  SlimeBlock_BlueSpawnQuatity: 0
+  SlimeBlock_BlueSpawnQuatity: 10
   SlimeBlock_Blue: {fileID: 5314038789622778752, guid: b29b92f6d21393f42b399feb8e148094, type: 3}
-  SlimeBlock_GreenSpawnQuatity: 0
+  SlimeBlock_GreenSpawnQuatity: 10
   SlimeBlock_Green: {fileID: 5314038789622778752, guid: 92f4150bb7c5a324db38352360f1af48, type: 3}
   SlimeBlock_RedSpawnQuatity: 1
   SlimeBlock_Red: {fileID: 5314038789622778752, guid: 9ef08c95e867e3e4eaacc2fb1e8cda40, type: 3}

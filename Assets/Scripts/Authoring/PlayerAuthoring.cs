@@ -19,6 +19,8 @@ public class PlayerAuthoring : MonoBehaviour
     public float range;
     public GameObject theScientist;
     public GameObject theThief;
+    public GameObject rocketPrefab;
+    public float shootICD;
 
     // Start is called before the first frame update
     class Baker: Baker<PlayerAuthoring> 
@@ -30,6 +32,11 @@ public class PlayerAuthoring : MonoBehaviour
             {
                 bulletPrefab = GetEntity(authoring.buttletPrefab, TransformUsageFlags.Dynamic),
                 weaponShootICD = authoring.weaponShotICD,
+            });
+            AddComponent(entity, new PlayerRocketWeaponInfo
+            {
+                shootICD = authoring.shootICD,
+                rocketPrefab = GetEntity(authoring.rocketPrefab, TransformUsageFlags.Dynamic),
             });
             AddComponent(entity, new PlayerInfoComponent
             {

@@ -6,7 +6,6 @@ using Unity.Burst;
 using Unity.Collections;
 using Unity.Transforms;
 using Unity.Mathematics;
-using static UnityEngine.EventSystems.EventTrigger;
 using Random = Unity.Mathematics.Random;
 
 [BurstCompile]
