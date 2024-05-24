@@ -22,7 +22,6 @@ public partial struct WeaponShootSystem : ISystem
         nextShootICD = Time.time;
     }
 
-    [BurstCompile]
     public void OnUpdate(ref SystemState state)
     {
         if(SystemAPI.TryGetSingletonEntity<PlayerInfoComponent>(out Entity entity))
@@ -47,7 +46,8 @@ public partial struct WeaponShootSystem : ISystem
                     {
                         bulletSpeed = playerInfo.bulletSpeed,
                         deliveryDamage = Mathf.RoundToInt(playerInfo.deliveryDmg * statMulti.damageMultiplier),
-                    });
+                        isEnemyBullet = false
+                    }) ;
                     state.EntityManager.SetComponentData(bullet, new BulletMovementInfo
                     {
                         

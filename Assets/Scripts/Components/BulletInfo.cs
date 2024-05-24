@@ -8,6 +8,7 @@ public struct BulletInfo : IComponentData
 {
     public float bulletSpeed;
     public int deliveryDamage;
+    public bool isEnemyBullet;
    
 }
 

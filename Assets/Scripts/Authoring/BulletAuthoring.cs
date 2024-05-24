@@ -19,7 +19,8 @@ public class BulletAuthoring : MonoBehaviour
             AddComponent(Entity, new BulletInfo
             {
                 bulletSpeed = authoring.BulletSpeed,
-                deliveryDamage = authoring.BulletDamage,               
+                deliveryDamage = authoring.BulletDamage,
+                isEnemyBullet = false
             });
             AddComponent(Entity, new BulletMovementInfo());
             AddComponent(Entity, new HealthOnBulletInfo
