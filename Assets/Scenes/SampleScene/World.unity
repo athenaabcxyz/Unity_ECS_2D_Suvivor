@@ -268,6 +268,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ade0abda2927f14f9e56516990e7697, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+<<<<<<< HEAD
+  Grimonk_BrownSpawnQuatity: 5
+  Grimonk_Brown: {fileID: 5314038789622778752, guid: 9eed8b1d63df5a243aaa8aad43ebd87f, type: 3}
+  Hedusa_BlueSpawnQuatity: 5
+  Hedusa_Blue: {fileID: 5314038789622778752, guid: 0d9c4991c17b9b241a3318c94420d949, type: 3}
+  Hedusa_GreenSpawnQuatity: 5
+  Hedusa_Green: {fileID: 5314038789622778752, guid: e69677e84910ea645b9bb5089a60f613, type: 3}
+  Hedusa_RedSpawnQuatity: 5
+  Hedusa_Red: {fileID: 5314038789622778752, guid: 99da0fc71b5e89e4da08d1dacbdd81af, type: 3}
+  MudRock_BrownSpawnQuatity: 5
+  MudRock_Brown: {fileID: 5314038789622778752, guid: 3cf6d8dcb66e3b9469407b353470c544, type: 3}
+  Orc_FleshSpawnQuatity: 5
+  Orc_Flesh: {fileID: 5314038789622778752, guid: c927742eafafbd643ac32183a22146f8, type: 3}
+  SlimeBlock_BlueSpawnQuatity: 5
+  SlimeBlock_Blue: {fileID: 5314038789622778752, guid: b29b92f6d21393f42b399feb8e148094, type: 3}
+  SlimeBlock_GreenSpawnQuatity: 1
+=======
   Grimonk_BrownSpawnQuatity: 100
   Grimonk_Brown: {fileID: 5314038789622778752, guid: 9eed8b1d63df5a243aaa8aad43ebd87f, type: 3}
   Hedusa_BlueSpawnQuatity: 100
@@ -283,6 +300,7 @@ MonoBehaviour:
   SlimeBlock_BlueSpawnQuatity: 0
   SlimeBlock_Blue: {fileID: 5314038789622778752, guid: b29b92f6d21393f42b399feb8e148094, type: 3}
   SlimeBlock_GreenSpawnQuatity: 0
+>>>>>>> c45b2ff7b40081865e44f53095c0bece349d8622
   SlimeBlock_Green: {fileID: 5314038789622778752, guid: 92f4150bb7c5a324db38352360f1af48, type: 3}
   SlimeBlock_RedSpawnQuatity: 10
   SlimeBlock_Red: {fileID: 5314038789622778752, guid: 9ef08c95e867e3e4eaacc2fb1e8cda40, type: 3}

@@ -6,8 +6,8 @@ using UnityEngine;
 
 public class PlayerControlGO : MonoBehaviour
 {
-    [SerializeField] Animator animator;
-    [SerializeField] float speed;
+    public Animator animator;
+    public float speed;
     public int maxHitPoint;
     public float hitCoolDown = 1f;
     public GameObject buttletPrefab;
@@ -24,11 +24,15 @@ public class PlayerControlGO : MonoBehaviour
 
     public GameObject spawner;
 
+    private IAnimationState currentAimState;
+    private IAnimationState currentIdleState;
+
 
     //private value
     private PlayerWeaponBehavior weaponBehavior;
     private double nextShootICD;
     private double nextRocketICD;
+    private IShootStrategy shootStrategy;
 
     // Start is called before the first frame update
     void Start()
@@ -37,6 +41,7 @@ public class PlayerControlGO : MonoBehaviour
         animator = GetComponent<Animator>();
         nextShootICD = Time.time;
         nextRocketICD = Time.time;
+        shootStrategy = new ShootBulletStrategy();
     }
 
     // Update is called once per frame
@@ -44,6 +49,17 @@ public class PlayerControlGO : MonoBehaviour
     {
         PlayerMovement();
     }
+
+    public void SwitchToBulletStrategy()
+    {
+        shootStrategy = new ShootBulletStrategy();
+    }
+
+    public void SwitchToRocketStrategy()
+    {
+        shootStrategy = new ShootRocketStrategy();
+    }
+
     private void PlayerMovement()
     {
         var horizontalInput = Input.GetAxis("Horizontal");
@@ -67,7 +83,6 @@ public class PlayerControlGO : MonoBehaviour
         }
         Vector3 dir = mousePosition - Camera.main.WorldToScreenPoint(transform.position);
         var weaponDirection = mousePosition - Camera.main.WorldToScreenPoint(weaponBehavior.GetWeaponPosition());
-        Debug.Log(GetAimDirection(GetAngleFromVector(dir)));
         ShootWeapon(weaponDirection, weaponBehavior.ShootPosition);
         ShootRocket(weaponDirection, weaponBehavior.ShootPosition);
         AnimatePlayer(GetAimDirection(GetAngleFromVector(dir)), movement);
@@ -160,66 +175,238 @@ public class PlayerControlGO : MonoBehaviour
     {
         if (moveDirection.x != 0 || moveDirection.y != 0)
         {
-            animator.SetBool("isMoving", true);
-            animator.SetBool("isIdle", false);
+            ChangeIdleState(new MovingAnimationState(this));
 
         }
         else
         {
-            animator.SetBool("isMoving", false);
-            animator.SetBool("isIdle", true);
+            ChangeIdleState(new IdleAnimationState(this));
         }
         switch (rotation)
         {
             case RotationEnum.aimUp:
-                animator.SetBool("aimUp", true);
-                animator.SetBool("aimDown", false);
-                animator.SetBool("aimRight", false);
-                animator.SetBool("aimLeft", false);
-                animator.SetBool("aimUpLeft", false);
-                animator.SetBool("aimUpRight", false);
+               ChangeAimState(new AimUpAnimationState(this));
 
                 break;
             case RotationEnum.aimDown:
-                animator.SetBool("aimUp", false);
-                animator.SetBool("aimDown", true);
-                animator.SetBool("aimRight", false);
-                animator.SetBool("aimLeft", false);
-                animator.SetBool("aimUpLeft", false);
-                animator.SetBool("aimUpRight", false);
+                ChangeAimState(new AimDownAnimationState(this));
                 break;
             case RotationEnum.aimRight:
-                animator.SetBool("aimUp", false);
-                animator.SetBool("aimDown", false);
-                animator.SetBool("aimRight", true);
-                animator.SetBool("aimLeft", false);
-                animator.SetBool("aimUpLeft", false);
-                animator.SetBool("aimUpRight", false);
+                ChangeAimState(new AimRightAnimationState(this));
                 break;
             case RotationEnum.aimLeft:
-                animator.SetBool("aimUp", false);
-                animator.SetBool("aimDown", false);
-                animator.SetBool("aimRight", false);
-                animator.SetBool("aimLeft", true);
-                animator.SetBool("aimUpLeft", false);
-                animator.SetBool("aimUpRight", false);
+                ChangeAimState(new AimLeftAnimationState(this));
                 break;
             case RotationEnum.aimUpLeft:
-                animator.SetBool("aimUp", false);
-                animator.SetBool("aimDown", false);
-                animator.SetBool("aimRight", false);
-                animator.SetBool("aimLeft", false);
-                animator.SetBool("aimUpLeft", true);
-                animator.SetBool("aimUpRight", false);
+                ChangeAimState(new AimUpLeftAnimationState(this));
                 break;
             case RotationEnum.aimUpRight:
-                animator.SetBool("aimUp", false);
-                animator.SetBool("aimDown", false);
-                animator.SetBool("aimRight", false);
-                animator.SetBool("aimLeft", false);
-                animator.SetBool("aimUpLeft", false);
-                animator.SetBool("aimUpRight", true);
+                ChangeAimState(new AimUpRightAnimationState(this));
                 break;
         }
+    }
+    public void ChangeAimState(IAnimationState newAnimationState)
+    {
+        currentAimState = newAnimationState;
+        currentAimState.UpdateState();
+    }
+
+     public void ChangeIdleState(IAnimationState newAnimationState)
+    {
+        currentIdleState = newAnimationState;
+        currentIdleState.UpdateState();
+    }
+
+   
+}
+
+public interface IAnimationState
+{
+    void UpdateState();
+}
+
+public class IdleAnimationState : IAnimationState
+{
+    private PlayerControlGO playerControl;
+
+    public IdleAnimationState(PlayerControlGO playerControl)
+    {
+        this.playerControl = playerControl;
+    }
+
+    public void UpdateState()
+    {
+        playerControl.animator.SetBool("isMoving", false);
+        playerControl.animator.SetBool("isIdle", true);
+
+        // Additional animation state-specific logic for idle state
+    }
+}
+
+public class MovingAnimationState : IAnimationState
+{
+    private PlayerControlGO playerControl;
+
+    public MovingAnimationState(PlayerControlGO playerControl)
+    {
+        this.playerControl = playerControl;
+    }
+
+    public void UpdateState()
+    {
+        playerControl.animator.SetBool("isMoving", true);
+        playerControl.animator.SetBool("isIdle", false);
+
+        // Additional animation state-specific logic for moving state
+    }
+}
+
+public class AimDownAnimationState : IAnimationState
+{
+    private PlayerControlGO playerControl;
+
+    public AimDownAnimationState(PlayerControlGO playerControl)
+    {
+        this.playerControl = playerControl;
+    }
+
+    public void UpdateState()
+    {
+        playerControl.animator.SetBool("aimUp", false);
+        playerControl.animator.SetBool("aimDown", true);
+        playerControl.animator.SetBool("aimRight", false);
+        playerControl.animator.SetBool("aimLeft", false);
+        playerControl.animator.SetBool("aimUpLeft", false);
+        playerControl.animator.SetBool("aimUpRight", false);
+    }
+}
+
+public class AimRightAnimationState : IAnimationState
+{
+    private PlayerControlGO playerControl;
+
+    public AimRightAnimationState(PlayerControlGO playerControl)
+    {
+        this.playerControl = playerControl;
+    }
+
+    public void UpdateState()
+    {
+        playerControl.animator.SetBool("aimUp", false);
+        playerControl.animator.SetBool("aimDown", false);
+        playerControl.animator.SetBool("aimRight", true);
+        playerControl.animator.SetBool("aimLeft", false);
+        playerControl.animator.SetBool("aimUpLeft", false);
+        playerControl.animator.SetBool("aimUpRight", false);
+    }
+}
+
+public class AimLeftAnimationState : IAnimationState
+{
+    private PlayerControlGO playerControl;
+
+    public AimLeftAnimationState(PlayerControlGO playerControl)
+    {
+        this.playerControl = playerControl;
+    }
+
+    public void UpdateState()
+    {
+        playerControl.animator.SetBool("aimUp", false);
+        playerControl.animator.SetBool("aimDown", false);
+        playerControl.animator.SetBool("aimRight", false);
+        playerControl.animator.SetBool("aimLeft", true);
+        playerControl.animator.SetBool("aimUpLeft", false);
+        playerControl.animator.SetBool("aimUpRight", false);
+    }
+}
+
+public class AimUpLeftAnimationState : IAnimationState
+{
+    private PlayerControlGO playerControl;
+
+    public AimUpLeftAnimationState(PlayerControlGO playerControl)
+    {
+        this.playerControl = playerControl;
+    }
+
+    public void UpdateState()
+    {
+        playerControl.animator.SetBool("aimUp", false);
+        playerControl.animator.SetBool("aimDown", false);
+        playerControl.animator.SetBool("aimRight", false);
+        playerControl.animator.SetBool("aimLeft", false);
+        playerControl.animator.SetBool("aimUpLeft", true);
+        playerControl.animator.SetBool("aimUpRight", false);
+    }
+}
+
+public class AimUpRightAnimationState : IAnimationState
+{
+    private PlayerControlGO playerControl;
+
+    public AimUpRightAnimationState(PlayerControlGO playerControl)
+    {
+        this.playerControl = playerControl;
+    }
+
+    public void UpdateState()
+    {
+        playerControl.animator.SetBool("aimUp", false);
+        playerControl.animator.SetBool("aimDown", false);
+        playerControl.animator.SetBool("aimRight", false);
+        playerControl.animator.SetBool("aimLeft", false);
+        playerControl.animator.SetBool("aimUpLeft", false);
+        playerControl.animator.SetBool("aimUpRight", true);
+    }
+}
+
+public class AimUpAnimationState : IAnimationState
+{
+    private PlayerControlGO playerControl;
+
+    public AimUpAnimationState(PlayerControlGO playerControl)
+    {
+        this.playerControl = playerControl;
+    }
+
+    public void UpdateState()
+    {
+        playerControl.animator.SetBool("aimUp", true);
+        playerControl.animator.SetBool("aimDown", false);
+        playerControl.animator.SetBool("aimRight", false);
+        playerControl.animator.SetBool("aimLeft", false);
+        playerControl.animator.SetBool("aimUpLeft", false);
+        playerControl.animator.SetBool("aimUpRight", false);
+    }
+}
+
+
+public interface IShootStrategy
+{
+    void Shoot(Vector3 weaponDirection, Transform shootPosition, GameObject bulletPrefab, float weaponShotICD, GameObject spawner, float nextShootICD);
+}
+
+public class ShootBulletStrategy : MonoBehaviour, IShootStrategy
+{
+    public void Shoot(Vector3 weaponDirection, Transform shootPosition, GameObject bulletPrefab, float weaponShotICD, GameObject spawner, float nextShootICD)
+    {
+        var bullet = Instantiate(bulletPrefab);
+        bullet.transform.position = shootPosition.position;
+        bullet.GetComponent<BulletControl>().spawner = spawner;
+        bullet.GetComponent<BulletControl>().SetMoveDirection(weaponDirection);
+        nextShootICD = (float)Time.time + weaponShotICD;
+    }
+}
+
+public class ShootRocketStrategy : MonoBehaviour, IShootStrategy
+{
+    public void Shoot(Vector3 weaponDirection, Transform shootPosition, GameObject bulletPrefab, float weaponShotICD, GameObject spawner, float nextShootICD)
+    {
+        var rocket = Instantiate(bulletPrefab);
+        rocket.transform.position = shootPosition.position;
+        rocket.GetComponent<RocketControl>().spawner = spawner;
+        rocket.GetComponent<RocketControl>().SetMoveDirection(weaponDirection);
+        nextShootICD = (float)Time.time + weaponShotICD;
     }
 }

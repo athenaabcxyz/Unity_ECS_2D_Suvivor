@@ -8,8 +8,6 @@ public struct CurrentWeaponInfo : IComponentData
 {
     public float3 weaponShootPosition;
     public float3 weaponShootDirection;
-
-
 }
 public struct WeaponInfo : IComponentData
 {

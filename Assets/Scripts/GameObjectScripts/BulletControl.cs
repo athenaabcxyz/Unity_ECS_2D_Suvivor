@@ -62,4 +62,5 @@ public class BulletControl : MonoBehaviour
     {
         this.moveDirection = moveDirection;
     }
+
 }
