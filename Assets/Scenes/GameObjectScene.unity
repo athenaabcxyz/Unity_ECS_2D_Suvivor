@@ -290,9 +290,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd564731a39bd204392f4a8c690f935e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Grimonk_BrownSpawnQuatity: 80
+  Grimonk_BrownSpawnQuatity: 500
   Grimonk_Brown: {fileID: 1271450167123410562, guid: ff485dd68876cbc4bba012237c48f7f1, type: 3}
-  SlimeBlock_RedSpawnQuatity: 2
+  SlimeBlock_RedSpawnQuatity: 20
   SlimeBlock_Red: {fileID: 5681276290337219884, guid: 2890dad2e720d854e9245e020a18f694, type: 3}
   player: {fileID: 813895713}
   enemyCounter: 0
